@@ -83,25 +83,27 @@
             padding: 60px 5% 60px 5%;
             overflow-y: auto;
             box-sizing: border-box;
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: none;
+            margin: 0;
             width: 100%;
         }
         
         .analytics-overview {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
             margin-bottom: 20px;
+            min-height: auto;
         }
         
         .overview-card {
             background: white;
             border: 1px solid #e9ecef;
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
+            min-width: 0;
         }
         
         .overview-card:hover {
@@ -119,10 +121,11 @@
         }
         
         .card-value {
-            font-size: 1.8em;
+            font-size: 1.6em;
             font-weight: 700;
             color: #2c3e50;
             margin-bottom: 2px;
+            line-height: 1.1;
         }
         
         .card-subtitle {
@@ -287,6 +290,7 @@
         @media (max-width: 1024px) {
             .analytics-overview {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
             }
             
             .metrics-grid {
@@ -302,6 +306,14 @@
                 gap: 30px;
             }
             
+            .overview-card {
+                padding: 14px;
+            }
+            
+            .card-value {
+                font-size: 1.4em;
+            }
+            
             .margin-indicator::before {
                 left: 5%;
                 right: 5%;
@@ -315,7 +327,8 @@
         
         @media (max-width: 640px) {
             .analytics-overview {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
             }
             
             .metrics-grid {
@@ -324,6 +337,26 @@
             
             .analytics-content {
                 padding: 20px 5% 20px 5%;
+            }
+            
+            .overview-card {
+                padding: 12px;
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .card-value {
+                font-size: 1.3em;
+            }
+            
+            .card-title {
+                font-size: 0.8em;
+                text-align: center;
+            }
+            
+            .card-subtitle {
+                font-size: 0.75em;
+                text-align: center;
             }
             
             .margin-indicator::before {
