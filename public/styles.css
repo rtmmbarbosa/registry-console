@@ -833,6 +833,7 @@ body {
     gap: 20px;
     margin-bottom: 20px;
     min-height: auto;
+    width: 100%;
 }
 
 .overview-card {
@@ -847,6 +848,8 @@ body {
     transition: all 0.3s ease;
     animation: slideInUp 0.5s ease-out;
     min-width: 0;
+    width: 100%;
+    flex: 1;
 }
 
 .overview-card:hover {
@@ -905,6 +908,8 @@ body {
     flex: 1;
     min-height: 0;
     max-height: none;
+    width: 100%;
+    max-width: none;
 }
 
 .analytics-left,
@@ -1352,10 +1357,50 @@ body {
 }
 
 /* Responsive Improvements */
-@media (max-width: 1024px) {
+@media (min-width: 1200px) {
+    .analytics-overview {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+    }
+    
+    .overview-card {
+        padding: 18px;
+        gap: 14px;
+    }
+    
+    .card-value {
+        font-size: 1.8em;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .analytics-overview {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+    
+    .overview-card {
+        padding: 14px;
+        gap: 10px;
+    }
+    
+    .card-value {
+        font-size: 1.5em;
+    }
+    
+    .card-title {
+        font-size: 0.85em;
+    }
+    
+    .card-subtitle {
+        font-size: 0.7em;
+    }
+}
+
+@media (max-width: 767px) {
     .analytics-overview {
         grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
+        gap: 12px;
     }
     
     .metrics-grid {
@@ -1369,15 +1414,6 @@ body {
     .analytics-main {
         grid-template-columns: 1fr;
         gap: 30px;
-    }
-    
-    .overview-card {
-        padding: 14px;
-        gap: 10px;
-    }
-    
-    .card-value {
-        font-size: 1.4em;
     }
 }
 
