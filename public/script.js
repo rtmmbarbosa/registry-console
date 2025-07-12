@@ -332,6 +332,91 @@ function updateAnalyticsPage() {
     if (analyticsElements.latestTags) {
         analyticsElements.latestTags.textContent = statistics.distribution?.tags?.latest || 0;
     }
+    
+    // Update Top Repositories section
+    updateTopRepositories();
+    
+    // Update Size Distribution Chart
+    updateSizeDistributionChart();
+}
+
+// Update Top Repositories section
+function updateTopRepositories() {
+    const topRepositoriesContainer = document.getElementById('topRepositories');
+    if (!topRepositoriesContainer) return;
+    
+    const repositories = statistics.repositories || [];
+    
+    if (repositories.length === 0) {
+        topRepositoriesContainer.innerHTML = `
+            <div class="loading-chart">No repository data available</div>
+        `;
+        return;
+    }
+    
+    // Sort by size and take top 10
+    const topRepos = repositories
+        .sort((a, b) => b.size - a.size)
+        .slice(0, 10);
+    
+    topRepositoriesContainer.innerHTML = topRepos.map((repo, index) => `
+        <div class="repo-item">
+            <div class="repo-info">
+                <div class="repo-name">${repo.name}</div>
+                <div class="repo-stats">
+                    <span>${repo.tags} tags</span>
+                    <span>${repo.layers} layers</span>
+                </div>
+            </div>
+            <div class="repo-size">${formatBytes(repo.size)}</div>
+        </div>
+    `).join('');
+}
+
+// Update Size Distribution Chart
+function updateSizeDistributionChart() {
+    const chartContainer = document.getElementById('sizeDistributionChart');
+    if (!chartContainer) return;
+    
+    const sizeDistribution = statistics.distribution?.sizes || {};
+    const data = [
+        { label: 'Small (<50MB)', value: sizeDistribution.small || 0, color: '#3498db' },
+        { label: 'Medium (50-200MB)', value: sizeDistribution.medium || 0, color: '#2ecc71' },
+        { label: 'Large (200MB-1GB)', value: sizeDistribution.large || 0, color: '#f39c12' },
+        { label: 'X-Large (>1GB)', value: sizeDistribution.xlarge || 0, color: '#e74c3c' }
+    ];
+    
+    const total = data.reduce((sum, item) => sum + item.value, 0);
+    
+    if (total === 0) {
+        chartContainer.innerHTML = `
+            <div class="loading-chart">No size distribution data available</div>
+        `;
+        return;
+    }
+    
+    chartContainer.innerHTML = `
+        <div class="size-chart">
+            ${data.map(item => {
+                const percentage = ((item.value / total) * 100).toFixed(1);
+                return `
+                    <div class="size-category">
+                        <div class="size-label">
+                            <span class="size-color" style="background-color: ${item.color}"></span>
+                            <span class="size-name">${item.label}</span>
+                        </div>
+                        <div class="size-bar">
+                            <div class="size-fill" style="width: ${percentage}%; background-color: ${item.color}"></div>
+                        </div>
+                        <div class="size-stats">
+                            <span class="size-count">${item.value}</span>
+                            <span class="size-percentage">${percentage}%</span>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
 }
 
 // Calculate health score
