@@ -361,24 +361,36 @@ function updateTopConsumers() {
         return;
     }
     
-    // Sort by size and take top 4
+    // Sort by size and take top 3
     const topRepos = repositories
         .sort((a, b) => b.size - a.size)
-        .slice(0, 4);
+        .slice(0, 3);
     
-    topConsumersContainer.innerHTML = topRepos.map((repo, index) => `
-        <div class="repo-item clickable" data-repo="${repo.name}" onclick="navigateToRepository('${repo.name}')">
-            <div class="repo-rank">#${index + 1}</div>
-            <div class="repo-info">
-                <div class="repo-name">${repo.name}</div>
-                <div class="repo-stats">
-                    <span>${repo.tags} tags</span>
-                    <span>${repo.layers} layers</span>
+    // Calculate total size for percentage calculation
+    const totalSize = repositories.reduce((sum, repo) => sum + repo.size, 0);
+    
+    topConsumersContainer.innerHTML = topRepos.map((repo, index) => {
+        const percentage = totalSize > 0 ? (repo.size / totalSize * 100).toFixed(1) : 0;
+        return `
+            <div class="repo-item clickable" data-repo="${repo.name}" onclick="navigateToRepository('${repo.name}')">
+                <div class="repo-rank">#${index + 1}</div>
+                <div class="repo-info">
+                    <div class="repo-name">${repo.name}</div>
+                    <div class="repo-stats">
+                        <span>${repo.tags} tags</span>
+                        <span>${repo.layers} layers</span>
+                    </div>
+                    <div class="repo-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="progress-text">${percentage}% of total</div>
+                    </div>
                 </div>
+                <div class="repo-size">${formatBytes(repo.size)}</div>
             </div>
-            <div class="repo-size">${formatBytes(repo.size)}</div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // Update Size Distribution Chart as Pie Chart

@@ -1032,12 +1032,13 @@ body {
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 15px;
+    padding: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease;
     position: relative;
+    margin-bottom: 8px;
 }
 
 .repo-item.clickable {
@@ -1059,38 +1060,110 @@ body {
 .repo-rank {
     background: var(--accent);
     color: var(--bg-primary);
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 0.9em;
-    margin-right: 12px;
+    font-size: 0.8em;
+    margin-right: 10px;
     flex-shrink: 0;
 }
 
 .repo-info {
     flex: 1;
+    min-width: 0;
 }
 
 .repo-name {
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    font-size: 0.9em;
 }
 
 .repo-stats {
-    font-size: 0.85em;
+    font-size: 0.75em;
     color: var(--text-secondary);
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+/* Progress Bar Styles for Top Consumers */
+.repo-progress {
+    margin-top: 4px;
+    width: 100%;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--bg-tertiary);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 3px;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent) 0%, #8a7b6b 100%);
+    border-radius: 2px;
+    transition: width 0.8s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: progressShimmer 2s ease-in-out infinite;
+}
+
+.progress-text {
+    font-size: 0.7em;
+    color: var(--text-secondary);
+    text-align: right;
+    opacity: 0.8;
+}
+
+@keyframes progressShimmer {
+    0% {
+        left: -100%;
+    }
+    50% {
+        left: 100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Animation delay for staggered effect */
+.repo-item:nth-child(1) .progress-fill {
+    animation-delay: 0.1s;
+}
+
+.repo-item:nth-child(2) .progress-fill {
+    animation-delay: 0.2s;
+}
+
+.repo-item:nth-child(3) .progress-fill {
+    animation-delay: 0.3s;
 }
 
 .repo-size {
     font-weight: 500;
     color: var(--text-primary);
+    font-size: 0.9em;
 }
 
 .loading-chart {
@@ -1891,3 +1964,5 @@ body {
         line-height: 1.5 !important;
     }
 }
+
+/* End of file */
