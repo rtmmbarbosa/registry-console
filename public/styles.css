@@ -343,6 +343,28 @@ body {
     background: var(--bg-primary);
 }
 
+/* Repository highlighting effect */
+.repository-item.highlighted {
+    animation: highlightRepository 3s ease-out;
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(var(--text-secondary-rgb), 0.3);
+}
+
+@keyframes highlightRepository {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(var(--text-secondary-rgb), 0);
+    }
+    20% {
+        transform: scale(1.02);
+        box-shadow: 0 0 20px rgba(var(--text-secondary-rgb), 0.4);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(var(--text-secondary-rgb), 0);
+    }
+}
+
 .repository-header {
     padding: 15px 20px;
     display: flex;
@@ -1001,9 +1023,9 @@ body {
 .repo-ranking {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    max-height: 400px;
-    overflow-y: auto;
+    gap: 8px;
+    max-height: none; /* Remove height restriction for top 4 */
+    overflow-y: visible;
 }
 
 .repo-item {
@@ -1015,11 +1037,38 @@ body {
     justify-content: space-between;
     align-items: center;
     transition: all 0.3s ease;
+    position: relative;
+}
+
+.repo-item.clickable {
+    cursor: pointer;
+}
+
+.repo-item.clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px var(--shadow-primary);
+    border-color: var(--accent);
+    background: var(--bg-secondary);
 }
 
 .repo-item:hover {
     transform: translateY(-1px);
     box-shadow: 0 2px 8px var(--shadow-primary);
+}
+
+.repo-rank {
+    background: var(--accent);
+    color: var(--bg-primary);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9em;
+    margin-right: 12px;
+    flex-shrink: 0;
 }
 
 .repo-info {

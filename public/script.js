@@ -358,13 +358,14 @@ function updateTopRepositories() {
         return;
     }
     
-    // Sort by size and take top 10
+    // Sort by size and take top 4
     const topRepos = repositories
         .sort((a, b) => b.size - a.size)
-        .slice(0, 10);
+        .slice(0, 4);
     
     topRepositoriesContainer.innerHTML = topRepos.map((repo, index) => `
-        <div class="repo-item">
+        <div class="repo-item clickable" data-repo="${repo.name}" onclick="navigateToRepository('${repo.name}')">
+            <div class="repo-rank">#${index + 1}</div>
             <div class="repo-info">
                 <div class="repo-name">${repo.name}</div>
                 <div class="repo-stats">
@@ -756,3 +757,51 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize with home page
     switchPage('home');
 });
+
+// Navigate to repository details on home page
+function navigateToRepository(repoName) {
+    console.log(`🔄 Navigating to repository: ${repoName}`);
+    
+    // Switch to home page
+    switchPage('home');
+    
+    // Wait for page transition and then load repository data
+    setTimeout(async () => {
+        try {
+            // Ensure repositories are loaded
+            if (repositories.length === 0) {
+                await loadRepositories();
+            }
+            
+            // Find the repository element
+            const repoElement = document.querySelector(`[data-repo="${repoName}"]`);
+            if (repoElement) {
+                // Expand the repository
+                const repoHeader = repoElement.querySelector('.repository-header');
+                if (repoHeader) {
+                    repoHeader.click();
+                    
+                    // Scroll to the repository
+                    setTimeout(() => {
+                        repoElement.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                        
+                        // Highlight the repository temporarily
+                        repoElement.classList.add('highlighted');
+                        setTimeout(() => {
+                            repoElement.classList.remove('highlighted');
+                        }, 3000);
+                    }, 100);
+                }
+            } else {
+                console.warn(`Repository ${repoName} not found in the list`);
+                showToast(`Repository ${repoName} not found`, 'warning');
+            }
+        } catch (error) {
+            console.error('Error navigating to repository:', error);
+            showToast('Error loading repository details', 'error');
+        }
+    }, 300); // Wait for page transition
+}
