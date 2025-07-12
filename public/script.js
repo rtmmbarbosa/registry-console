@@ -312,8 +312,11 @@ function updateAnalyticsPage() {
         const largestRepo = statistics.insights?.largestRepo;
         if (largestRepo) {
             analyticsElements.analyticsLargest.textContent = `${largestRepo.name} (${formatBytes(largestRepo.size)})`;
+            // Add class for proper text wrapping on long repository names
+            analyticsElements.analyticsLargest.classList.add('largest-repo');
         } else {
             analyticsElements.analyticsLargest.textContent = 'No data';
+            analyticsElements.analyticsLargest.classList.remove('largest-repo');
         }
     }
     
