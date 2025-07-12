@@ -195,16 +195,15 @@
                     
                     <!-- Main Analytics Content -->
                     <div class="analytics-main">
-                        <div class="analytics-left">
-                            <!-- Size Distribution Chart -->
+                        <!-- Top Row: Top Repositories and Advanced Metrics -->
+                        <div class="analytics-top-row">
                             <div class="analytics-section">
-                                <h3>Size Distribution</h3>
-                                <div id="sizeDistributionChart" class="chart-container">
-                                    <div class="loading-chart">Loading analytics...</div>
+                                <h3>Top Repositories</h3>
+                                <div id="topRepositories" class="repo-ranking">
+                                    <div class="loading-chart">Loading repository data...</div>
                                 </div>
                             </div>
                             
-                            <!-- Advanced Metrics -->
                             <div class="analytics-section">
                                 <h3>Advanced Metrics</h3>
                                 <div class="metrics-grid">
@@ -236,12 +235,12 @@
                             </div>
                         </div>
                         
-                        <div class="analytics-right">
-                            <!-- Top Repositories -->
+                        <!-- Bottom Row: Size Distribution Pie Chart -->
+                        <div class="analytics-bottom-row">
                             <div class="analytics-section">
-                                <h3>Top Repositories</h3>
-                                <div id="topRepositories" class="repo-ranking">
-                                    <div class="loading-chart">Loading repository data...</div>
+                                <h3>Size Distribution</h3>
+                                <div id="sizeDistributionChart" class="chart-container pie-chart-container">
+                                    <div class="loading-chart">Loading analytics...</div>
                                 </div>
                             </div>
                         </div>

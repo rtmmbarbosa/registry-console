@@ -377,7 +377,7 @@ function updateTopRepositories() {
     `).join('');
 }
 
-// Update Size Distribution Chart
+// Update Size Distribution Chart as Pie Chart
 function updateSizeDistributionChart() {
     const chartContainer = document.getElementById('sizeDistributionChart');
     if (!chartContainer) return;
@@ -399,28 +399,62 @@ function updateSizeDistributionChart() {
         return;
     }
     
-    chartContainer.innerHTML = `
-        <div class="size-chart">
-            ${data.map(item => {
-                const percentage = ((item.value / total) * 100).toFixed(1);
-                return `
-                    <div class="size-category">
-                        <div class="size-label">
-                            <span class="size-color" style="background-color: ${item.color}"></span>
-                            <span class="size-name">${item.label}</span>
-                        </div>
-                        <div class="size-bar">
-                            <div class="size-fill" style="width: ${percentage}%; background-color: ${item.color}"></div>
-                        </div>
-                        <div class="size-stats">
-                            <span class="size-count">${item.value}</span>
-                            <span class="size-percentage">${percentage}%</span>
+    // Calculate angles for pie chart
+    let currentAngle = 0;
+    const chartData = data.map(item => {
+        const percentage = (item.value / total) * 100;
+        const angle = (item.value / total) * 360;
+        const result = {
+            ...item,
+            percentage: percentage.toFixed(1),
+            startAngle: currentAngle,
+            endAngle: currentAngle + angle
+        };
+        currentAngle += angle;
+        return result;
+    }).filter(item => item.value > 0); // Only show segments with data
+    
+    // Create pie chart HTML
+    const pieChartHTML = `
+        <div class="pie-chart-wrapper">
+            <div class="pie-chart" style="
+                --chart-color-1: ${chartData[0]?.color || '#3498db'};
+                --chart-color-2: ${chartData[1]?.color || '#2ecc71'};
+                --chart-color-3: ${chartData[2]?.color || '#f39c12'};
+                --chart-color-4: ${chartData[3]?.color || '#e74c3c'};
+                --chart-end-1: ${chartData[0]?.endAngle || 0}deg;
+                --chart-end-2: ${chartData[1]?.endAngle || 0}deg;
+                --chart-end-3: ${chartData[2]?.endAngle || 0}deg;
+                background: conic-gradient(
+                    from 0deg,
+                    ${chartData.map(item => 
+                        `${item.color} ${item.startAngle}deg ${item.endAngle}deg`
+                    ).join(', ')}
+                );
+            ">
+                <div class="pie-chart-center">
+                    ${total}<br>
+                    <span style="font-size: 0.7em; opacity: 0.8;">Total</span>
+                </div>
+            </div>
+            <div class="pie-chart-legend">
+                ${chartData.map(item => `
+                    <div class="pie-legend-item">
+                        <div class="pie-legend-color" style="background-color: ${item.color}"></div>
+                        <div class="pie-legend-info">
+                            <div class="pie-legend-label">${item.label}</div>
+                            <div class="pie-legend-stats">
+                                <span class="pie-legend-count">${item.value}</span>
+                                <span class="pie-legend-percentage">${item.percentage}%</span>
+                            </div>
                         </div>
                     </div>
-                `;
-            }).join('')}
+                `).join('')}
+            </div>
         </div>
     `;
+    
+    chartContainer.innerHTML = pieChartHTML;
 }
 
 // Show delete modal
