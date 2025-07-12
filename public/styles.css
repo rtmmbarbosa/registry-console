@@ -819,6 +819,11 @@ body {
     flex-direction: column;
     gap: 20px;
     height: 100%;
+    padding: 60px 15% 60px 15%;
+    overflow-y: auto;
+    box-sizing: border-box;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .analytics-overview {
@@ -895,6 +900,7 @@ body {
     gap: 20px;
     flex: 1;
     min-height: 0;
+    max-height: none;
 }
 
 .analytics-left,
@@ -902,7 +908,9 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    overflow-y: auto;
+    overflow-y: visible;
+    max-height: none;
+    padding-right: 5px;
 }
 
 .analytics-section {
@@ -1348,6 +1356,15 @@ body {
     .metrics-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+    
+    .analytics-content {
+        padding: 40px 10% 40px 10%;
+    }
+    
+    .analytics-main {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
 }
 
 @media (max-width: 640px) {
@@ -1358,6 +1375,10 @@ body {
     
     .metrics-grid {
         grid-template-columns: 1fr;
+    }
+    
+    .analytics-content {
+        padding: 20px 5% 20px 5%;
     }
     
     .settings-actions {
