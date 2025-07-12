@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RegistryConsole</title>
+    <link rel="stylesheet" href="styles.css?v=2025071101">
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h1>RegistryConsole</h1>
+                    <p>Registry Management</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav class="nav-menu">
+                <button class="nav-item active" data-page="home">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                    </svg>
+                    <span>Home</span>
+                </button>
+                <button class="nav-item" data-page="analytics">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    <span>Analytics</span>
+                </button>
+                <button class="nav-item" data-page="settings">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6M12 17v6M4.22 4.22l4.24 4.24M15.54 15.54l4.24 4.24M1 12h6M17 12h6M4.22 19.78l4.24-4.24M15.54 8.46l4.24-4.24"></path>
+                    </svg>
+                    <span>Settings</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <!-- Home Page -->
+            <div class="page active" id="homePage" data-page="home">
+                <div class="page-header">
+                    <h2>Docker Registry</h2>
+                    <div class="header-actions">
+                        <button class="refresh-btn icon-only" onclick="refreshData()" title="Refresh">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                <path d="M21 3v5h-5"></path>
+                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                <path d="M3 21v-5h5"></path>
+                            </svg>
+                        </button>
+                        <button class="theme-toggle-btn icon-only" title="Toggle Theme">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="loading" id="loadingRepos">Loading...</div>
+                </div>
+                
+                <div class="content-layout">
+                    <div class="left-panel">
+                        <div id="repositoriesList" class="repositories-list"></div>
+                    </div>
+                    <div class="right-panel">
+                        <div id="detailsPanel" class="details-content">
+                            <div class="details-placeholder">
+                                <div class="placeholder-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </div>
+                                <h3>Select an image to view details</h3>
+                                <p>Click on any repository or tag to see detailed information</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div class="page" id="analyticsPage" data-page="analytics">
+                <div class="page-header">
+                    <h2>Registry Analytics</h2>
+                    <div class="header-actions">
+                        <button class="refresh-btn icon-only" onclick="refreshStatistics()" title="Refresh Analytics">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                <path d="M21 3v5h-5"></path>
+                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                <path d="M3 21v-5h5"></path>
+                            </svg>
+                        </button>
+                        <button class="theme-toggle-btn icon-only" title="Toggle Theme">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="loading" id="loadingStats">Loading statistics...</div>
+                </div>
+                
+                <div class="analytics-content">
+                    <!-- Overview Cards -->
+                    <div class="analytics-overview">
+                        <div class="overview-card">
+                            <div class="card-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                                </svg>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-title">Total Repositories</div>
+                                <div class="card-value" id="analyticsRepos">-</div>
+                                <div class="card-subtitle">Active registries</div>
+                            </div>
+                        </div>
+                        
+                        <div class="overview-card">
+                            <div class="card-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <rect x="9" y="9" width="6" height="6"></rect>
+                                </svg>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-title">Total Images</div>
+                                <div class="card-value" id="analyticsImages">-</div>
+                                <div class="card-subtitle">Docker images</div>
+                            </div>
+                        </div>
+                        
+                        <div class="overview-card">
+                            <div class="card-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                                </svg>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-title">Total Size</div>
+                                <div class="card-value" id="analyticsSize">-</div>
+                                <div class="card-subtitle">Storage used</div>
+                            </div>
+                        </div>
+                        
+                        <div class="overview-card">
+                            <div class="card-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                                </svg>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-title">Health Score</div>
+                                <div class="card-value" id="analyticsHealth">-</div>
+                                <div class="card-subtitle">Registry health</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Main Analytics Content -->
+                    <div class="analytics-main">
+                        <div class="analytics-left">
+                            <!-- Size Distribution Chart -->
+                            <div class="analytics-section">
+                                <h3>Size Distribution</h3>
+                                <div id="sizeDistributionChart" class="chart-container">
+                                    <div class="loading-chart">Loading analytics...</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Advanced Metrics -->
+                            <div class="analytics-section">
+                                <h3>Advanced Metrics</h3>
+                                <div class="metrics-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-label">Avg Images per Repository</div>
+                                        <div class="metric-value" id="avgImagesPerRepo">-</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-label">Avg Size per Repository</div>
+                                        <div class="metric-value" id="avgSizePerRepo">-</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-label">Avg Layers per Image</div>
+                                        <div class="metric-value" id="avgLayers">-</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-label">Active Repositories</div>
+                                        <div class="metric-value" id="activeRepos">-</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-label">Empty Repositories</div>
+                                        <div class="metric-value" id="emptyRepos">-</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-label">Latest Tags</div>
+                                        <div class="metric-value" id="latestTags">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="analytics-right">
+                            <!-- Top Repositories -->
+                            <div class="analytics-section">
+                                <h3>Top Repositories</h3>
+                                <div id="topRepositories" class="repo-ranking">
+                                    <div class="loading-chart">Loading repository data...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div class="page" id="settingsPage" data-page="settings">
+                <div class="page-header">
+                    <h2>Settings</h2>
+                </div>
+                
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3>Registry Configuration</h3>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <label>Registry URL</label>
+                                <input type="text" id="registryUrl" readonly placeholder="Loading...">
+                            </div>
+                            <div class="setting-item">
+                                <label>Auto-refresh Interval</label>
+                                <select id="refreshInterval">
+                                    <option value="300000">5 minutes</option>
+                                    <option value="600000">10 minutes</option>
+                                    <option value="900000">15 minutes</option>
+                                    <option value="1800000">30 minutes</option>
+                                    <option value="0">Disabled</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Appearance</h3>
+                        <div class="settings-grid">
+                            <div class="setting-item">
+                                <label>Theme</label>
+                                <select id="themeSelect">
+                                    <option value="light">Light</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="auto">Auto (System)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Cache Management</h3>
+                        <div class="settings-actions">
+                            <button class="btn btn-secondary" onclick="clearStatisticsCache()">
+                                Clear Statistics Cache
+                            </button>
+                            <button class="btn btn-secondary" onclick="exportStatistics()">
+                                Export Statistics
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h3>⚠️ Confirm Deletion</h3>
+            <p>Are you sure you want to delete this image?</p>
+            <div class="modal-info">
+                <strong>Repository:</strong> <span id="deleteRepoName"></span><br>
+                <strong>Tag:</strong> <span id="deleteTagName"></span>
+            </div>
+            <div class="modal-actions">
+                <button id="confirmDelete" class="btn btn-danger">Delete</button>
+                <button id="cancelDelete" class="btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Messages -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js?v=2025071101"></script>
+</body>
+</html>

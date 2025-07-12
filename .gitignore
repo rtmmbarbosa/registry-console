@@ -1,0 +1,16 @@
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.env
+.env.local
+.env.production
+.DS_Store
+*.tgz
+*.tar.gz
+.nyc_output
+coverage/
+.vscode/
+.idea/
+*.log
