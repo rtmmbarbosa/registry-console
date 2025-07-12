@@ -1805,14 +1805,14 @@ body {
 /* Special handling for largest repository card to allow proper text display */
 .largest-repo-card {
     min-height: 100px !important;
-    align-items: flex-start !important;
+    align-items: center !important;
 }
 
 .largest-repo-card .card-content {
     min-height: 60px !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: flex-start !important;
+    justify-content: center !important;
     width: 100% !important;
     flex: 1 !important;
 }
