@@ -697,8 +697,6 @@ function toggleTheme() {
     
     localStorage.setItem('registryConsoleTheme', newTheme);
     applyTheme(newTheme);
-    
-    showToast(`Theme changed to ${newTheme}`, 'success');
 }
 
 function applyTheme(theme) {

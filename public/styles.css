@@ -16,29 +16,34 @@
     --light-text-secondary: #5d4e37;
     --light-text-secondary-rgb: 93, 78, 55;
     
-    /* Dark Mode Colors */
-    --dark-bg-primary: #1a1a1a;
-    --dark-bg-secondary: #2d2d2d;
-    --dark-bg-tertiary: #3a3a3a;
-    --dark-surface: #404040;
-    --dark-text-primary: #e8e8e8;
-    --dark-text-secondary: #b8b8b8;
-    --dark-text-secondary-rgb: 184, 184, 184;
-    --dark-accent: #8a7b6b;
-    --dark-border: #4a4a4a;
+    /* Dark Mode Colors - Harmonized Palette */
+    --dark-bg-primary: #1c1917;      /* Warm dark base */
+    --dark-bg-secondary: #292524;    /* Warm secondary */
+    --dark-bg-tertiary: #3c3836;     /* Warm tertiary */
+    --dark-surface: #44403c;         /* Warm surface */
+    --dark-text-primary: #faf4ed;    /* Warm white */
+    --dark-text-secondary: #d0c4b0;  /* Warm secondary text */
+    --dark-text-secondary-rgb: 208, 196, 176;
+    --dark-accent: #b5a390;          /* Harmonized accent */
+    --dark-border: #57534e;          /* Warm border */
     
-    /* Status Colors (work for both modes) */
+    /* Status Colors */
     --danger: #d4a5a5;
     --success: #b8d4a5;
     --warning: #f0d8a8;
+    
+    /* Dark Mode Status Colors */
+    --dark-danger: #ef4444;
+    --dark-success: #22c55e;
+    --dark-warning: #f59e0b;
     
     /* Shadow Colors */
     --shadow-light: rgba(0, 0, 0, 0.1);
     --shadow-medium: rgba(0, 0, 0, 0.15);
     --shadow-dark: rgba(0, 0, 0, 0.2);
-    --dark-shadow-light: rgba(0, 0, 0, 0.3);
-    --dark-shadow-medium: rgba(0, 0, 0, 0.4);
-    --dark-shadow-dark: rgba(0, 0, 0, 0.5);
+    --dark-shadow-light: rgba(0, 0, 0, 0.4);
+    --dark-shadow-medium: rgba(0, 0, 0, 0.5);
+    --dark-shadow-dark: rgba(0, 0, 0, 0.6);
     
     /* Active Theme Variables (default to light) */
     --bg-primary: var(--baby-powder);
@@ -73,6 +78,9 @@
     --shadow-secondary: var(--dark-shadow-medium);
     --shadow-tertiary: var(--dark-shadow-dark);
     --border-color: var(--dark-border);
+    --danger: var(--dark-danger);
+    --success: var(--dark-success);
+    --warning: var(--dark-warning);
 }
 
 body {
@@ -1110,7 +1118,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent) 0%, #8a7b6b 100%);
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 100%);
     border-radius: 2px;
     transition: width 0.8s ease-out;
     position: relative;
