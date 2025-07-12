@@ -337,6 +337,10 @@ app.get('/api/stats', async (req, res) => {
         const avgSizePerRepo = repositories.length > 0 ? totalSize / repositories.length : 0;
         const avgLayersPerImage = totalImages > 0 ? Math.round(totalLayers / totalImages * 10) / 10 : 0;
 
+        // Sort repositories by size to get the largest
+        const sortedRepos = repoStats.sort((a, b) => b.size - a.size);
+        const largestRepo = sortedRepos.length > 0 ? sortedRepos[0] : null;
+
         const statsData = {
             basic: {
                 totalRepositories: repositories.length,
@@ -354,11 +358,15 @@ app.get('/api/stats', async (req, res) => {
                 sizes: sizeDistribution,
                 activity: activityStats
             },
-            repositories: repoStats.sort((a, b) => b.size - a.size), // Sort by size
+            repositories: sortedRepos,
             health: {
                 emptyRepos: repositories.length - repoStats.length,
-                activeRepos: activityStats.activeRepos,
+                recentRepos: activityStats.recentRepos,
                 inactiveRepos: repositories.length - activityStats.activeRepos
+            },
+            insights: {
+                largestRepo: largestRepo,
+                recentRepos: activityStats.recentRepos
             },
             metadata: {
                 lastUpdated: new Date().toISOString(),

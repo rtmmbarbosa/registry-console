@@ -178,13 +178,17 @@
                         <div class="overview-card">
                             <div class="card-icon">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                                    <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                                    <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                                    <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                                    <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                                    <rect x="10" y="10" width="4" height="4"></rect>
                                 </svg>
                             </div>
                             <div class="card-content">
-                                <div class="card-title">Health Score</div>
-                                <div class="card-value" id="analyticsHealth">-</div>
-                                <div class="card-subtitle">Registry health</div>
+                                <div class="card-title">Largest Repository</div>
+                                <div class="card-value" id="analyticsLargest">-</div>
+                                <div class="card-subtitle">Biggest storage consumer</div>
                             </div>
                         </div>
                     </div>
@@ -217,8 +221,8 @@
                                         <div class="metric-value" id="avgLayers">-</div>
                                     </div>
                                     <div class="metric-item">
-                                        <div class="metric-label">Active Repositories</div>
-                                        <div class="metric-value" id="activeRepos">-</div>
+                                        <div class="metric-label">Recent Repositories</div>
+                                        <div class="metric-value" id="recentRepos">-</div>
                                     </div>
                                     <div class="metric-item">
                                         <div class="metric-label">Empty Repositories</div>

@@ -290,11 +290,11 @@ function updateAnalyticsPage() {
         analyticsRepos: document.getElementById('analyticsRepos'),
         analyticsImages: document.getElementById('analyticsImages'),
         analyticsSize: document.getElementById('analyticsSize'),
-        analyticsHealth: document.getElementById('analyticsHealth'),
+        analyticsLargest: document.getElementById('analyticsLargest'),
         avgImagesPerRepo: document.getElementById('avgImagesPerRepo'),
         avgSizePerRepo: document.getElementById('avgSizePerRepo'),
         avgLayers: document.getElementById('avgLayers'),
-        activeRepos: document.getElementById('activeRepos'),
+        recentRepos: document.getElementById('recentRepos'),
         emptyRepos: document.getElementById('emptyRepos'),
         latestTags: document.getElementById('latestTags')
     };
@@ -308,9 +308,13 @@ function updateAnalyticsPage() {
     if (analyticsElements.analyticsSize) {
         analyticsElements.analyticsSize.textContent = formatBytes(statistics.basic?.totalSize || 0);
     }
-    if (analyticsElements.analyticsHealth) {
-        const healthScore = calculateHealthScore(statistics);
-        analyticsElements.analyticsHealth.textContent = `${healthScore}%`;
+    if (analyticsElements.analyticsLargest) {
+        const largestRepo = statistics.insights?.largestRepo;
+        if (largestRepo) {
+            analyticsElements.analyticsLargest.textContent = `${largestRepo.name} (${formatBytes(largestRepo.size)})`;
+        } else {
+            analyticsElements.analyticsLargest.textContent = 'No data';
+        }
     }
     
     // Update advanced metrics
@@ -323,8 +327,8 @@ function updateAnalyticsPage() {
     if (analyticsElements.avgLayers) {
         analyticsElements.avgLayers.textContent = statistics.averages?.avgLayersPerImage?.toFixed(1) || '0';
     }
-    if (analyticsElements.activeRepos) {
-        analyticsElements.activeRepos.textContent = statistics.health?.activeRepos || 0;
+    if (analyticsElements.recentRepos) {
+        analyticsElements.recentRepos.textContent = statistics.insights?.recentRepos || 0;
     }
     if (analyticsElements.emptyRepos) {
         analyticsElements.emptyRepos.textContent = statistics.health?.emptyRepos || 0;
@@ -417,21 +421,6 @@ function updateSizeDistributionChart() {
             }).join('')}
         </div>
     `;
-}
-
-// Calculate health score
-function calculateHealthScore(stats) {
-    if (!stats || !stats.basic?.totalRepositories) return 0;
-    
-    const totalRepos = stats.basic.totalRepositories;
-    const factors = {
-        activeRepos: (stats.health?.activeRepos || 0) / totalRepos * 30,
-        recentActivity: Math.min((stats.distribution?.tags?.latest || 0) / totalRepos * 20, 20),
-        sizeEfficiency: Math.min(40 - (stats.basic?.totalSize || 0) / 1000000000 * 10, 40),
-        diversity: Math.min(totalRepos / 50 * 10, 10)
-    };
-    
-    return Math.round(factors.activeRepos + factors.recentActivity + factors.sizeEfficiency + factors.diversity);
 }
 
 // Show delete modal

@@ -876,6 +876,7 @@ body {
 
 .card-content {
     flex: 1;
+    min-width: 0; /* Allow text truncation */
 }
 
 .card-title {
@@ -891,8 +892,11 @@ body {
     font-size: 1.6em;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     line-height: 1.1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .card-subtitle {
