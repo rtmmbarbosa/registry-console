@@ -294,7 +294,7 @@ function updateAnalyticsPage() {
         avgImagesPerRepo: document.getElementById('avgImagesPerRepo'),
         avgSizePerRepo: document.getElementById('avgSizePerRepo'),
         avgLayers: document.getElementById('avgLayers'),
-        recentRepos: document.getElementById('recentRepos'),
+        activeRepos: document.getElementById('activeRepos'),
         emptyRepos: document.getElementById('emptyRepos'),
         latestTags: document.getElementById('latestTags')
     };
@@ -327,8 +327,8 @@ function updateAnalyticsPage() {
     if (analyticsElements.avgLayers) {
         analyticsElements.avgLayers.textContent = statistics.averages?.avgLayersPerImage?.toFixed(1) || '0';
     }
-    if (analyticsElements.recentRepos) {
-        analyticsElements.recentRepos.textContent = statistics.insights?.recentRepos || 0;
+    if (analyticsElements.activeRepos) {
+        analyticsElements.activeRepos.textContent = statistics.health?.activeRepos || 0;
     }
     if (analyticsElements.emptyRepos) {
         analyticsElements.emptyRepos.textContent = statistics.health?.emptyRepos || 0;
@@ -337,22 +337,22 @@ function updateAnalyticsPage() {
         analyticsElements.latestTags.textContent = statistics.distribution?.tags?.latest || 0;
     }
     
-    // Update Top Repositories section
-    updateTopRepositories();
+    // Update Top Consumers section
+    updateTopConsumers();
     
     // Update Size Distribution Chart
     updateSizeDistributionChart();
 }
 
-// Update Top Repositories section
-function updateTopRepositories() {
-    const topRepositoriesContainer = document.getElementById('topRepositories');
-    if (!topRepositoriesContainer) return;
+// Update Top Consumers section
+function updateTopConsumers() {
+    const topConsumersContainer = document.getElementById('topConsumers');
+    if (!topConsumersContainer) return;
     
     const repositories = statistics.repositories || [];
     
     if (repositories.length === 0) {
-        topRepositoriesContainer.innerHTML = `
+        topConsumersContainer.innerHTML = `
             <div class="loading-chart">No repository data available</div>
         `;
         return;
@@ -363,7 +363,7 @@ function updateTopRepositories() {
         .sort((a, b) => b.size - a.size)
         .slice(0, 4);
     
-    topRepositoriesContainer.innerHTML = topRepos.map((repo, index) => `
+    topConsumersContainer.innerHTML = topRepos.map((repo, index) => `
         <div class="repo-item clickable" data-repo="${repo.name}" onclick="navigateToRepository('${repo.name}')">
             <div class="repo-rank">#${index + 1}</div>
             <div class="repo-info">

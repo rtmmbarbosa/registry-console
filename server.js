@@ -361,7 +361,7 @@ app.get('/api/stats', async (req, res) => {
             repositories: sortedRepos,
             health: {
                 emptyRepos: repositories.length - repoStats.length,
-                recentRepos: activityStats.recentRepos,
+                activeRepos: activityStats.activeRepos,
                 inactiveRepos: repositories.length - activityStats.activeRepos
             },
             insights: {
