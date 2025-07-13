@@ -53,8 +53,6 @@
     --text-secondary: var(--light-text-secondary);
     --text-secondary-rgb: var(--light-text-secondary-rgb);
     --accent: var(--pale-dogwood);
-    --sidebar-gradient-start: var(--pale-dogwood);
-    --sidebar-gradient-end: var(--champagne-pink);
     --shadow-primary: var(--shadow-light);
     --shadow-secondary: var(--shadow-medium);
     --shadow-tertiary: var(--shadow-dark);
@@ -81,8 +79,6 @@
     --text-secondary: var(--dark-text-secondary);
     --text-secondary-rgb: var(--dark-text-secondary-rgb);
     --accent: var(--dark-accent);
-    --sidebar-gradient-start: var(--dark-bg-secondary);
-    --sidebar-gradient-end: var(--dark-bg-tertiary);
     --shadow-primary: var(--dark-shadow-light);
     --shadow-secondary: var(--dark-shadow-medium);
     --shadow-tertiary: var(--dark-shadow-dark);
@@ -165,7 +161,7 @@ body {
 }
 .sidebar {
     width: 320px;
-    background: linear-gradient(180deg, var(--sidebar-gradient-start) 0%, var(--sidebar-gradient-end) 100%);
+    background: var(--bg-secondary);
     color: var(--text-primary);
     padding: 0;
     display: flex;
@@ -1218,7 +1214,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 100%);
+    background: var(--accent);
     border-radius: 2px;
     transition: width 0.8s ease-out;
     position: relative;
@@ -1232,8 +1228,8 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    animation: progressShimmer 2s ease-in-out infinite;
+    background: transparent;
+    animation: none;
 }
 
 .progress-text {
@@ -1459,7 +1455,7 @@ body {
 }
 
 .dark-theme .sidebar {
-    background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);
+    background: var(--bg-secondary);
 }
 
 .dark-theme .nav-item {
@@ -1527,7 +1523,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: transparent;
     transition: left 0.5s ease;
 }
 
@@ -2075,7 +2071,7 @@ body {
     content: '';
     width: 4px;
     height: 24px;
-    background: linear-gradient(135deg, var(--accent), var(--surface));
+    background: var(--accent);
     border-radius: 2px;
     flex-shrink: 0;
 }
@@ -2223,7 +2219,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: transparent;
     transition: left 0.5s ease;
 }
 
@@ -2461,19 +2457,19 @@ body {
     background-size: 16px !important;
 }
 .settings-section.registry-config h3::before {
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    background: #3498db;
 }
 
 .settings-section.appearance h3::before {
-    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    background: #9b59b6;
 }
 
 .settings-section.cache-management h3::before {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    background: #e74c3c;
 }
 
 .settings-section.settings-management h3::before {
-    background: linear-gradient(135deg, #f39c12, #e67e22);
+    background: #f39c12;
 }
 .settings-content::before {
     content: '';
@@ -2482,7 +2478,7 @@ body {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--surface), var(--accent));
+    background: var(--accent);
     border-radius: 2px;
 }
 
