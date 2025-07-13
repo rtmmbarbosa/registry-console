@@ -882,8 +882,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     
     // Apply saved theme immediately for consistency with login page
+    // This ensures theme continuity: if user selected dark mode on login,
+    // they will see dark mode in the main app immediately
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
+        console.log(`🎨 Applying saved theme: ${savedTheme}`);
         applyTheme(savedTheme);
     }
     

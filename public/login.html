@@ -269,8 +269,10 @@
 
         // Initialize theme
         document.addEventListener('DOMContentLoaded', function() {
-            // Check localStorage first, fallback to light theme
+            // Theme persistence: check localStorage first for consistency
+            // This ensures theme choice is maintained across login/main app
             const savedTheme = localStorage.getItem('theme') || 'light';
+            console.log(`🎨 Login: applying saved theme: ${savedTheme}`);
             setTheme(savedTheme);
         });
 
