@@ -1424,75 +1424,59 @@ body {
 }
 .toast {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
     padding: 15px 25px;
     border-radius: 8px;
-    color: white;
+    background: var(--baby-powder);
+    color: var(--light-text-primary);
     font-weight: 500;
     font-size: 0.9em;
     z-index: 10000;
     opacity: 0;
-    transform: translateY(-20px);
     transition: all 0.3s ease;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    border-left: 4px solid;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    border: 2px solid;
     min-width: 200px;
     max-width: 400px;
+    text-align: center;
 }
 
 .toast.show {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
 }
 
-.toast.info {
-    background: #3498db;
-    border-left-color: #2980b9;
+/* Toast styles for dark theme - maintain baby powder background */
+.dark-theme .toast,
+[data-theme="dark"] .toast {
+    background: var(--baby-powder) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.toast.success {
-    background: #2ecc71;
-    border-left-color: #27ae60;
+.dark-theme .toast.info,
+[data-theme="dark"] .toast.info {
+    border-color: #3498db;
+    color: #2c3e50;
 }
 
-.toast.warning {
-    background: #f39c12;
-    border-left-color: #e67e22;
+.dark-theme .toast.success,
+[data-theme="dark"] .toast.success {
+    border-color: #27ae60;
+    color: #1e8449;
 }
 
-.toast.error {
-    background: #e74c3c;
-    border-left-color: #c0392b;
-}
-.dark-theme {
-    --bg-primary: #0f0f0f;
-    --bg-secondary: #1a1a1a;
-    --bg-tertiary: #2a2a2a;
-    --text-primary: #ffffff;
-    --text-secondary: #cccccc;
-    --text-secondary-rgb: 204, 204, 204;
-    --shadow-primary: rgba(0, 0, 0, 0.6);
-    --shadow-secondary: rgba(0, 0, 0, 0.7);
-    --border-color: #404040;
-    --accent-color: #b8956f;
+.dark-theme .toast.warning,
+[data-theme="dark"] .toast.warning {
+    border-color: #e67e22;
+    color: #d35400;
 }
 
-.dark-theme .sidebar {
-    background: var(--bg-secondary);
-}
-
-.dark-theme .nav-item {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.dark-theme .nav-item:hover {
-    background: rgba(255, 255, 255, 0.15);
-}
-
-.dark-theme .nav-item.active {
-    background: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
+.dark-theme .toast.error,
+[data-theme="dark"] .toast.error {
+    border-color: #c0392b;
+    color: #a93226;
 }
 
 /* Force dark background for body */
@@ -1500,25 +1484,6 @@ body {
 .dark-theme body {
     background-color: #0f0f0f !important;
     color: #ffffff !important;
-}
-.loading-chart {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 200px;
-    color: var(--text-secondary);
-    font-style: italic;
-}
-
-.loading-chart::after {
-    content: '';
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--text-secondary);
-    border-top: 2px solid var(--accent-color);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-left: 10px;
 }
 .page {
     animation: fadeIn 0.3s ease-in-out;
@@ -1718,9 +1683,17 @@ body {
     }
     
     .toast {
-        right: 10px;
-        left: 10px;
+        bottom: 20px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%) translateY(20px);
         min-width: auto;
+        max-width: calc(100vw - 40px);
+        margin: 0 20px;
+    }
+    
+    .toast.show {
+        transform: translateX(-50%) translateY(0);
     }
 }
 @media (max-width: 1024px) {
@@ -2222,7 +2195,7 @@ body {
 
 .settings-actions .btn {
     padding: 12px 24px;
-    font-size: 1em;
+    font-size: 1em !important;
     font-weight: 600;
     border-radius: 8px;
     border: 2px solid var(--border-color);
@@ -2267,6 +2240,7 @@ body {
     background: var(--surface);
     color: var(--text-primary);
     border-color: var(--accent);
+    font-size: 1em !important;
 }
 
 .settings-actions .btn-secondary:hover {
@@ -2282,9 +2256,11 @@ body {
     justify-content: center;
     gap: 8px;
     white-space: nowrap;
+    font-size: 1em !important;
 }
 .settings-actions .btn-secondary {
     color: var(--text-primary);
+    font-size: 1em !important;
 }
 
 .settings-actions .btn-danger {
@@ -2448,6 +2424,11 @@ body {
     .settings-actions {
         gap: 10px;
     }
+    
+    .settings-actions .btn {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
 }
 [data-theme="dark"] .setting-item input,
 [data-theme="dark"] .setting-item select {
@@ -2490,6 +2471,11 @@ body {
 
 .settings-section.cache-management h3::before {
     background: #c07c7c;
+}
+
+.settings-section.cache-management .btn {
+    font-size: 1em !important;
+    font-weight: 600 !important;
 }
 
 .settings-section.settings-management h3::before {
