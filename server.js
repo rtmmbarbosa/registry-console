@@ -206,7 +206,7 @@ app.get('/api/repositories', requireAuth, async (req, res) => {
 });
 
 // Route to list tags from a repository
-app.get('/api/repositories/:name/tags', requireAuth, async (req, res) => {
+app.get('/api/repositories/:name(*)/tags', requireAuth, async (req, res) => {
     try {
         const { name } = req.params;
         const data = await registryRequest(`/${name}/tags/list`);
@@ -217,7 +217,7 @@ app.get('/api/repositories/:name/tags', requireAuth, async (req, res) => {
 });
 
 // Route to get image manifest
-app.get('/api/repositories/:name/manifests/:tag', requireAuth, async (req, res) => {
+app.get('/api/repositories/:name(*)/manifests/:tag', requireAuth, async (req, res) => {
     try {
         const { name, tag } = req.params;
         
@@ -258,7 +258,7 @@ app.get('/api/repositories/:name/manifests/:tag', requireAuth, async (req, res) 
 });
 
 // Route to delete an image
-app.delete('/api/repositories/:name/manifests/:digest', requireAuth, async (req, res) => {
+app.delete('/api/repositories/:name(*)/manifests/:digest', requireAuth, async (req, res) => {
     try {
         const { name, digest } = req.params;
         const { default: fetch } = await import('node-fetch');
@@ -478,7 +478,7 @@ app.post('/api/stats/refresh', requireAuth, async (req, res) => {
 });
 
 // Route to get blob data (config information)
-app.get('/api/repositories/:name/blobs/:digest', requireAuth, async (req, res) => {
+app.get('/api/repositories/:name(*)/blobs/:digest', requireAuth, async (req, res) => {
     try {
         const { name, digest } = req.params;
         const data = await registryRequest(`/${name}/blobs/${digest}`);

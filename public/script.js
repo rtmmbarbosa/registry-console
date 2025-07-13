@@ -287,7 +287,7 @@ async function loadRepositoriesWithTags() {
     
     for (const repo of repositories) {
         try {
-            const response = await authenticatedFetch(`/api/repositories/${repo}/tags`);
+            const response = await authenticatedFetch(`/api/repositories/${encodeURIComponent(repo)}/tags`);
             if (!response) return; // Authentication failed and redirected
             const data = await response.json();
             
@@ -619,7 +619,7 @@ async function confirmDeleteImage() {
     if (!deleteImageData) return;
     
     try {
-        const manifestResponse = await fetch(`/api/repositories/${deleteImageData.repo}/manifests/${deleteImageData.tag}`, {
+        const manifestResponse = await fetch(`/api/repositories/${encodeURIComponent(deleteImageData.repo)}/manifests/${encodeURIComponent(deleteImageData.tag)}`, {
             headers: {
                 'Accept': 'application/vnd.docker.distribution.manifest.v2+json'
             }
@@ -634,7 +634,7 @@ async function confirmDeleteImage() {
             throw new Error('Digest not found in manifest');
         }
         
-        const deleteResponse = await fetch(`/api/repositories/${deleteImageData.repo}/manifests/${digest}`, {
+        const deleteResponse = await fetch(`/api/repositories/${encodeURIComponent(deleteImageData.repo)}/manifests/${digest}`, {
             method: 'DELETE'
         });
         
@@ -669,7 +669,7 @@ async function showImageDetails(repoName, tagName) {
     `;
     
     try {
-        const response = await fetch(`/api/repositories/${repoName}/manifests/${tagName}`);
+        const response = await fetch(`/api/repositories/${encodeURIComponent(repoName)}/manifests/${encodeURIComponent(tagName)}`);
         const data = await response.json();
         
         if (!response.ok) {
