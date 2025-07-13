@@ -200,7 +200,7 @@ body {
     align-items: center;
     gap: 15px;
     border-bottom: 1px solid var(--border-color);
-    opacity: 0.3;
+    opacity: 1;
 }
 
 .logo-icon {
@@ -213,6 +213,11 @@ body {
     color: var(--text-primary);
 }
 
+.logo-icon img {
+    width: 32px;
+    height: 32px;
+}
+
 .logo-text {
     flex: 1;
     text-align: left;
@@ -223,12 +228,13 @@ body {
     margin-bottom: 5px;
     font-weight: 600;
     color: var(--text-primary);
+    opacity: 1;
 }
 
 .logo-text p {
     font-size: 0.85em;
-    opacity: 0.8;
-    font-weight: 300;
+    opacity: 0.9;
+    font-weight: 400;
     color: var(--text-secondary);
 }
 

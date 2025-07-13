@@ -37,6 +37,17 @@
             margin-bottom: 2rem;
         }
 
+        .login-logo {
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-logo img {
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
         .login-header h1 {
             color: var(--text-color);
             margin: 0 0 0.5rem 0;
@@ -192,6 +203,9 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
+                <div class="login-logo">
+                    <img src="logo.svg" alt="RegistryConsole Logo" width="48" height="48">
+                </div>
                 <h1>Registry Console</h1>
                 <p>Please sign in to continue</p>
             </div>
