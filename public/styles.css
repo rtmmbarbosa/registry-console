@@ -121,6 +121,18 @@
 }
 
 .dark-theme {
+    /* Background colors */
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #2a2a2a;
+    --surface: #333333;
+    
+    /* Text colors */
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-secondary-rgb: 204, 204, 204;
+    
+    /* Login-specific variables */
     --primary-color: var(--dark-accent);
     --primary-hover: var(--dark-surface);
     --primary-color-rgb: 74, 158, 255;
@@ -128,11 +140,14 @@
     --card-bg: var(--dark-bg-secondary);
     --input-bg: var(--dark-bg-tertiary);
     --text-color: var(--dark-text-primary);
-    --text-secondary: var(--dark-text-secondary);
     --hover-bg: var(--dark-surface);
     --error-color: var(--dark-danger);
     --error-color-rgb: 239, 68, 68;
     --border-color: var(--dark-border);
+    
+    /* Accent and other colors */
+    --accent: var(--dark-accent);
+    --accent-color: #4a9eff;
 }
 
 body {
@@ -1458,6 +1473,13 @@ body {
 .dark-theme .nav-item.active {
     background: rgba(255, 255, 255, 0.2);
     color: #ffffff;
+}
+
+/* Force dark background for body */
+[data-theme="dark"] body,
+.dark-theme body {
+    background-color: #0f0f0f !important;
+    color: #ffffff !important;
 }
 .loading-chart {
     display: flex;
