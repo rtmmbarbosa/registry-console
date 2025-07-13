@@ -1,0 +1,28 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Container boxes representing Docker containers -->
+  <rect x="3" y="6" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  <rect x="12" y="6" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  <rect x="21" y="6" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  
+  <rect x="3" y="14" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  <rect x="12" y="14" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  <rect x="21" y="14" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  
+  <!-- Central management console symbol -->
+  <circle cx="16" cy="25" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+  <circle cx="16" cy="25" r="1.5" fill="currentColor"/>
+  
+  <!-- Connection lines from console to containers -->
+  <line x1="16" y1="21" x2="7" y2="12" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+  <line x1="16" y1="21" x2="16" y2="12" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+  <line x1="16" y1="21" x2="25" y2="12" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Small dots in containers to represent content -->
+  <circle cx="7" cy="9" r="0.8" fill="currentColor" opacity="0.4"/>
+  <circle cx="16" cy="9" r="0.8" fill="currentColor" opacity="0.4"/>
+  <circle cx="25" cy="9" r="0.8" fill="currentColor" opacity="0.4"/>
+  
+  <circle cx="7" cy="17" r="0.8" fill="currentColor" opacity="0.4"/>
+  <circle cx="16" cy="17" r="0.8" fill="currentColor" opacity="0.4"/>
+  <circle cx="25" cy="17" r="0.8" fill="currentColor" opacity="0.4"/>
+</svg>
