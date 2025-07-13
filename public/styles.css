@@ -371,6 +371,20 @@ body {
 .page.active {
     display: flex;
 }
+
+/* Settings page specific override for full-width scroll */
+.page[data-page="settings"] {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.page[data-page="settings"] .settings-content {
+    padding: 30px 5%;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
 .main-content {
     flex: 1;
     overflow: hidden;
@@ -2030,12 +2044,12 @@ body {
     }
 }
 .settings-content {
-    padding: 30px;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 30px 5%;
+    width: 100%;
     background: var(--bg-primary);
     min-height: 100%;
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .settings-section {
@@ -2363,7 +2377,7 @@ body {
 }
 @media (max-width: 768px) {
     .settings-content {
-        padding: 20px;
+        padding: 20px 4%;
     }
     
     .settings-section {
@@ -2394,7 +2408,7 @@ body {
 
 @media (max-width: 480px) {
     .settings-content {
-        padding: 15px;
+        padding: 15px 3%;
     }
     
     .settings-section {
@@ -2473,9 +2487,12 @@ body {
     background: #c07c7c;
 }
 
-.settings-section.cache-management .btn {
-    font-size: 1em !important;
+/* Specific styling for cache management buttons to handle longer text */
+.settings-section.cache-management .settings-actions .btn {
+    font-size: 0.9em !important;
     font-weight: 600 !important;
+    min-width: 140px;
+    padding: 12px 20px;
 }
 
 .settings-section.settings-management h3::before {
