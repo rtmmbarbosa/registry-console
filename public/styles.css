@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -60,6 +59,18 @@
     --shadow-secondary: var(--shadow-medium);
     --shadow-tertiary: var(--shadow-dark);
     --border-color: var(--linen);
+    
+    /* Login-specific variables */
+    --primary-color: var(--pale-dogwood);
+    --primary-hover: var(--champagne-pink);
+    --primary-color-rgb: 208, 184, 172;
+    --secondary-color: var(--champagne-pink);
+    --card-bg: var(--white);
+    --input-bg: var(--baby-powder);
+    --text-color: var(--light-text-primary);
+    --hover-bg: var(--linen);
+    --error-color: var(--danger);
+    --error-color-rgb: 212, 165, 165;
 }
 [data-theme="dark"] {
     --bg-primary: var(--dark-bg-primary);
@@ -79,6 +90,49 @@
     --danger: var(--dark-danger);
     --success: var(--dark-success);
     --warning: var(--dark-warning);
+    
+    /* Login-specific variables for dark theme */
+    --primary-color: var(--dark-accent);
+    --primary-hover: var(--dark-surface);
+    --primary-color-rgb: 181, 163, 144;
+    --secondary-color: var(--dark-surface);
+    --card-bg: var(--dark-bg-secondary);
+    --input-bg: var(--dark-bg-tertiary);
+    --text-color: var(--dark-text-primary);
+    --hover-bg: var(--dark-surface);
+    --error-color: var(--dark-danger);
+    --error-color-rgb: 239, 68, 68;
+}
+
+/* Theme classes for login compatibility */
+.light-theme {
+    --primary-color: var(--pale-dogwood);
+    --primary-hover: var(--champagne-pink);
+    --primary-color-rgb: 208, 184, 172;
+    --secondary-color: var(--champagne-pink);
+    --card-bg: var(--white);
+    --input-bg: var(--baby-powder);
+    --text-color: var(--light-text-primary);
+    --text-secondary: var(--light-text-secondary);
+    --hover-bg: var(--linen);
+    --error-color: var(--danger);
+    --error-color-rgb: 212, 165, 165;
+    --border-color: var(--linen);
+}
+
+.dark-theme {
+    --primary-color: var(--dark-accent);
+    --primary-hover: var(--dark-surface);
+    --primary-color-rgb: 181, 163, 144;
+    --secondary-color: var(--dark-surface);
+    --card-bg: var(--dark-bg-secondary);
+    --input-bg: var(--dark-bg-tertiary);
+    --text-color: var(--dark-text-primary);
+    --text-secondary: var(--dark-text-secondary);
+    --hover-bg: var(--dark-surface);
+    --error-color: var(--dark-danger);
+    --error-color-rgb: 239, 68, 68;
+    --border-color: var(--dark-border);
 }
 
 body {
@@ -142,6 +196,78 @@ body {
     font-weight: 300;
     color: var(--text-secondary);
 }
+
+/* User Info Section */
+.user-info {
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--card-bg);
+    margin: 0 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.user-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-role {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+.logout-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--hover-bg);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.logout-btn:hover {
+    background: var(--error-color);
+    color: white;
+    transform: scale(1.05);
+}
+
+.logout-btn:active {
+    transform: scale(0.95);
+}
+
 .nav-menu {
     flex: 1;
     padding: 20px 0;
@@ -1413,6 +1539,7 @@ body {
 .refresh-btn.loading svg {
     animation: spin 1s linear infinite;
 }
+
 .analytics-left::-webkit-scrollbar,
 .analytics-right::-webkit-scrollbar {
     width: 6px;

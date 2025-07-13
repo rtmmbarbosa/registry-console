@@ -7,6 +7,128 @@ let deleteImageData = null;
 let selectedItem = null;
 let registryConfig = null;
 
+// Authentication state
+let authState = {
+    authenticated: false,
+    authEnabled: false,
+    username: null,
+    loginTime: null
+};
+
+// Check authentication status
+async function checkAuthStatus() {
+    try {
+        const response = await fetch('/api/auth/user');
+        const data = await response.json();
+        
+        authState = {
+            authenticated: data.authenticated || false,
+            authEnabled: data.authEnabled || false,
+            username: data.username || null,
+            loginTime: data.loginTime || null
+        };
+        
+        // Update UI based on auth state
+        updateAuthUI();
+        
+        return authState;
+    } catch (error) {
+        console.error('Error checking auth status:', error);
+        authState = {
+            authenticated: false,
+            authEnabled: false,
+            username: null,
+            loginTime: null
+        };
+        return authState;
+    }
+}
+
+// Update UI based on authentication state
+function updateAuthUI() {
+    if (!authState.authEnabled) {
+        // Authentication disabled - hide auth elements
+        const authElements = document.querySelectorAll('[data-auth]');
+        authElements.forEach(el => el.style.display = 'none');
+        return;
+    }
+    
+    // Authentication enabled - show/hide elements based on login state
+    const loggedInElements = document.querySelectorAll('[data-auth="logged-in"]');
+    const loggedOutElements = document.querySelectorAll('[data-auth="logged-out"]');
+    
+    if (authState.authenticated) {
+        loggedInElements.forEach(el => el.style.display = '');
+        loggedOutElements.forEach(el => el.style.display = 'none');
+        
+        // Update username display
+        const usernameElements = document.querySelectorAll('[data-username]');
+        usernameElements.forEach(el => el.textContent = authState.username || 'User');
+    } else {
+        loggedInElements.forEach(el => el.style.display = 'none');
+        loggedOutElements.forEach(el => el.style.display = '');
+    }
+}
+
+// Logout function
+async function logout() {
+    try {
+        const response = await fetch('/api/auth/logout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+        
+        // Check if response is ok
+        if (response.ok) {
+            const data = await response.json();
+            
+            if (data.success) {
+                // Clear any cached data
+                localStorage.removeItem('authUser');
+                sessionStorage.clear();
+                
+                // Redirect to login page
+                window.location.href = data.redirectTo || '/login';
+            } else {
+                showToast('Logout failed', 'error');
+            }
+        } else {
+            // If not JSON response, assume redirect
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        // Force redirect to login on error
+        window.location.href = '/login';
+    }
+}
+
+// Enhanced fetch with authentication error handling
+async function authenticatedFetch(url, options = {}) {
+    try {
+        const response = await fetch(url, options);
+        
+        if (response.status === 401) {
+            // Unauthorized - redirect to login
+            const data = await response.json();
+            if (data.redirectTo) {
+                window.location.href = data.redirectTo;
+            } else {
+                window.location.href = '/login';
+            }
+            return null;
+        }
+        
+        return response;
+    } catch (error) {
+        console.error('Authenticated fetch error:', error);
+        throw error;
+    }
+}
+
 // DOM elements - Initialize after DOM is loaded
 let elements = {};
 
@@ -126,7 +248,9 @@ async function loadRepositories() {
     elements.repositoriesList.innerHTML = '';
     
     try {
-        const response = await fetch('/api/repositories');
+        const response = await authenticatedFetch('/api/repositories');
+        if (!response) return; // Authentication failed and redirected
+        
         const data = await response.json();
         
         if (!response.ok) {
@@ -163,7 +287,8 @@ async function loadRepositoriesWithTags() {
     
     for (const repo of repositories) {
         try {
-            const response = await fetch(`/api/repositories/${repo}/tags`);
+            const response = await authenticatedFetch(`/api/repositories/${repo}/tags`);
+            if (!response) return; // Authentication failed and redirected
             const data = await response.json();
             
             if (response.ok) {
@@ -261,7 +386,9 @@ async function loadStatistics() {
     showLoading('stats');
     
     try {
-        const response = await fetch('/api/stats');
+        const response = await authenticatedFetch('/api/stats');
+        if (!response) return; // Authentication failed and redirected
+        
         const data = await response.json();
         
         if (!response.ok) {
@@ -734,7 +861,7 @@ function formatBytes(bytes) {
 }
 
 // Initialization
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     console.log('DOM Content Loaded - Initializing RegistryConsole...');
     
     // Initialize DOM elements first
@@ -743,6 +870,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup event listeners
     setupEventListeners();
     setupNavigation();
+    
+    // Check authentication status first
+    const auth = await checkAuthStatus();
+    
+    // If authentication is enabled but user is not authenticated, 
+    // the middleware will redirect to login page
+    if (auth.authEnabled && !auth.authenticated) {
+        console.log('Authentication required - redirecting to login...');
+        return;
+    }
     
     // Initialize settings system
     initializeSettings();
@@ -808,7 +945,9 @@ let autoRefreshTimer = null;
 // Settings management functions
 async function getServerSettings() {
     try {
-        const response = await fetch('/api/settings');
+        const response = await authenticatedFetch('/api/settings');
+        if (!response) return null; // Authentication failed and redirected
+        
         const data = await response.json();
         
         if (response.ok) {
@@ -838,13 +977,14 @@ async function getServerSettings() {
 
 async function updateServerSettings(newSettings) {
     try {
-        const response = await fetch('/api/settings', {
+        const response = await authenticatedFetch('/api/settings', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(newSettings)
         });
+        if (!response) return null; // Authentication failed and redirected
         
         const data = await response.json();
         
@@ -1031,7 +1171,9 @@ async function clearStatisticsCache() {
 async function exportStatistics() {
     try {
         // First get the current statistics
-        const response = await fetch('/api/stats');
+        const response = await authenticatedFetch('/api/stats');
+        if (!response) return; // Authentication failed and redirected
+        
         const data = await response.json();
         
         if (!response.ok) {

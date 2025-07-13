@@ -11,7 +11,7 @@
     "docker",
     "registry",
     "ui",
-    "management", 
+    "management",
     "container",
     "production",
     "environment-config"
@@ -22,9 +22,11 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "express": "^4.18.2",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.18.1",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {

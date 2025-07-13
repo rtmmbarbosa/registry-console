@@ -1,9 +1,10 @@
 # RegistryConsole 🐳
 
-Modern web interface for Docker Registry management with environment-based configuration, perfect for production deployments and containerized environments.
+Modern web interface for Docker Registry management with authentication, environment-based configuration, and comprehensive security features - perfect for production deployments and containerized environments.
 
 ## ✨ Features
 
+- **🔐 Authentication System**: Secure login with session management and route protection
 - **📦 Repository Management**: View and manage all repositories in the registry
 - **🏷️ Tag Management**: Complete listing and management of tags per repository
 - **🗑️ Safe Cleanup**: Image deletion with confirmation dialogs
@@ -35,6 +36,12 @@ REGISTRY_USERNAME=your_username
 REGISTRY_PASSWORD=your_password
 PORT=3000
 NODE_ENV=production
+
+# Authentication Configuration
+AUTH_ENABLED=true
+AUTH_USERNAME=admin
+AUTH_PASSWORD=$2b$10$TYPp33iP8dHvzB8cwW.Mr.L4b6YbQ5ZcjFbDngCHz4dOnjAui3v8O
+SESSION_SECRET=your-secret-key-change-in-production
 
 # Application Settings
 DEFAULT_THEME=light
@@ -77,6 +84,10 @@ docker-compose --profile development up -d
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `AUTH_ENABLED` | `false` | Enable/disable authentication |
+| `AUTH_USERNAME` | - | Username for authentication |
+| `AUTH_PASSWORD` | - | Bcrypt hashed password for authentication |
+| `SESSION_SECRET` | - | Secret key for session management |
 | `DEFAULT_THEME` | `light` | UI theme: `light`, `dark`, or `auto` |
 | `AUTO_REFRESH_INTERVAL` | `300000` | Auto-refresh interval in milliseconds |
 | `AUTO_REFRESH_ENABLED` | `true` | Enable/disable automatic refresh |
@@ -198,12 +209,40 @@ spec:
 
 ## 🔐 Security
 
+- **Session-based Authentication**: Secure login system with configurable credentials
+- **Password Protection**: Bcrypt-hashed passwords with salt for enhanced security
+- **Route Protection**: All endpoints protected with authentication middleware
+- **Session Management**: Secure sessions with configurable expiration and HttpOnly cookies
+- **CSRF Protection**: Built-in protection against cross-site request forgery
 - **Environment Variables**: Secure credential management via `.env`
 - **HTTP Basic Authentication**: Direct integration with Docker Registry auth
 - **Input Validation**: Comprehensive request validation and sanitization
 - **Confirmation Dialogs**: Mandatory confirmation for destructive operations
 - **Audit Logging**: Server-side logging of all operations
 - **Container Security**: Non-root user execution in Docker containers
+
+### Authentication Setup
+
+1. **Enable Authentication**:
+```env
+AUTH_ENABLED=true
+AUTH_USERNAME=admin
+```
+
+2. **Generate Password Hash**:
+```bash
+node -e "const bcrypt = require('bcrypt'); console.log(bcrypt.hashSync('your-password', 10));"
+```
+
+3. **Configure Environment**:
+```env
+AUTH_PASSWORD=$2b$10$TYPp33iP8dHvzB8cwW.Mr.L4b6YbQ5ZcjFbDngCHz4dOnjAui3v8O
+SESSION_SECRET=your-secret-key-change-in-production
+```
+
+4. **Default Credentials**: 
+   - Username: `admin`
+   - Password: `admin` (change in production!)
 
 ## 🚀 Performance
 

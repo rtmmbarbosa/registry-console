@@ -1,15 +1,30 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const session = require('express-session');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Import authentication middleware
+const { requireAuth, redirectIfAuthenticated, handleLogin, handleLogout, getCurrentUser } = require('./middleware/auth');
+
+// Session configuration
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        httpOnly: true, // Prevent XSS attacks
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
+
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
 
 // Registry configuration
 const REGISTRY_CONFIG = {
@@ -30,6 +45,14 @@ const APP_SETTINGS = {
     settingsExportEnabled: process.env.SETTINGS_EXPORT_ENABLED === 'true'
 };
 
+// Authentication configuration
+const AUTH_CONFIG = {
+    enabled: process.env.AUTH_ENABLED === 'true',
+    username: process.env.AUTH_USERNAME,
+    password: process.env.AUTH_PASSWORD,
+    sessionSecret: process.env.SESSION_SECRET
+};
+
 // Check if credentials are configured
 if (!REGISTRY_CONFIG.url || !REGISTRY_CONFIG.username || !REGISTRY_CONFIG.password) {
     console.error('❌ Error: Registry credentials not configured in .env');
@@ -48,7 +71,18 @@ console.log(`   Cache: ${APP_SETTINGS.cacheEnabled ? 'enabled (' + APP_SETTINGS.
 console.log(`   Notifications: ${APP_SETTINGS.notificationsEnabled ? 'enabled' : 'disabled'}`);
 console.log(`   Export Features: Stats=${APP_SETTINGS.statisticsExportEnabled}, Settings=${APP_SETTINGS.settingsExportEnabled}`);
 
-// Basic authentication function
+console.log('🔒 Authentication Configuration:');
+console.log(`   Enabled: ${AUTH_CONFIG.enabled ? 'yes' : 'no'}`);
+if (AUTH_CONFIG.enabled) {
+    console.log(`   Username: ${AUTH_CONFIG.username || 'NOT CONFIGURED'}`);
+    console.log(`   Password: ${AUTH_CONFIG.password ? '***' : 'NOT CONFIGURED'}`);
+    console.log(`   Session Secret: ${AUTH_CONFIG.sessionSecret ? '***' : 'NOT CONFIGURED'}`);
+    
+    if (!AUTH_CONFIG.username || !AUTH_CONFIG.password || !AUTH_CONFIG.sessionSecret) {
+        console.error('❌ Error: Authentication is enabled but credentials are not properly configured');
+        process.exit(1);
+    }
+}
 function getAuthHeader() {
     const credentials = Buffer.from(`${REGISTRY_CONFIG.username}:${REGISTRY_CONFIG.password}`).toString('base64');
     return `Basic ${credentials}`;
@@ -144,8 +178,25 @@ async function registryRequest(endpoint, options = {}) {
     }
 }
 
+// ------- AUTHENTICATION ROUTES -------
+
+// Login page
+app.get('/login', redirectIfAuthenticated, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Authentication API routes
+app.post('/api/auth/login', handleLogin);
+app.post('/api/auth/logout', handleLogout);
+app.get('/api/auth/user', getCurrentUser);
+
+// Static files (excluding index.html which needs authentication)
+app.use(express.static('public', { index: false }));
+
+// ------- PROTECTED API ROUTES -------
+
 // Route to list repositories
-app.get('/api/repositories', async (req, res) => {
+app.get('/api/repositories', requireAuth, async (req, res) => {
     try {
         const data = await registryRequest('/_catalog');
         res.json(data);
@@ -155,7 +206,7 @@ app.get('/api/repositories', async (req, res) => {
 });
 
 // Route to list tags from a repository
-app.get('/api/repositories/:name/tags', async (req, res) => {
+app.get('/api/repositories/:name/tags', requireAuth, async (req, res) => {
     try {
         const { name } = req.params;
         const data = await registryRequest(`/${name}/tags/list`);
@@ -166,7 +217,7 @@ app.get('/api/repositories/:name/tags', async (req, res) => {
 });
 
 // Route to get image manifest
-app.get('/api/repositories/:name/manifests/:tag', async (req, res) => {
+app.get('/api/repositories/:name/manifests/:tag', requireAuth, async (req, res) => {
     try {
         const { name, tag } = req.params;
         
@@ -207,7 +258,7 @@ app.get('/api/repositories/:name/manifests/:tag', async (req, res) => {
 });
 
 // Route to delete an image
-app.delete('/api/repositories/:name/manifests/:digest', async (req, res) => {
+app.delete('/api/repositories/:name/manifests/:digest', requireAuth, async (req, res) => {
     try {
         const { name, digest } = req.params;
         const { default: fetch } = await import('node-fetch');
@@ -238,7 +289,7 @@ let statsCache = {
 };
 
 // Route to get statistics
-app.get('/api/stats', async (req, res) => {
+app.get('/api/stats', requireAuth, async (req, res) => {
     try {
         // Check cache first (if enabled)
         const now = Date.now();
@@ -409,7 +460,7 @@ app.get('/api/stats', async (req, res) => {
 });
 
 // Route to invalidate statistics cache
-app.post('/api/stats/refresh', async (req, res) => {
+app.post('/api/stats/refresh', requireAuth, async (req, res) => {
     try {
         console.log('🔄 Invalidating statistics cache...');
         
@@ -427,7 +478,7 @@ app.post('/api/stats/refresh', async (req, res) => {
 });
 
 // Route to get blob data (config information)
-app.get('/api/repositories/:name/blobs/:digest', async (req, res) => {
+app.get('/api/repositories/:name/blobs/:digest', requireAuth, async (req, res) => {
     try {
         const { name, digest } = req.params;
         const data = await registryRequest(`/${name}/blobs/${digest}`);
@@ -438,7 +489,7 @@ app.get('/api/repositories/:name/blobs/:digest', async (req, res) => {
 });
 
 // Route to get registry configuration
-app.get('/api/config', async (req, res) => {
+app.get('/api/config', requireAuth, async (req, res) => {
     try {
         res.json({
             registryUrl: REGISTRY_CONFIG.url
@@ -450,7 +501,7 @@ app.get('/api/config', async (req, res) => {
 });
 
 // Route to get application settings
-app.get('/api/settings', async (req, res) => {
+app.get('/api/settings', requireAuth, async (req, res) => {
     try {
         res.json({
             defaultTheme: APP_SETTINGS.defaultTheme,
@@ -470,7 +521,7 @@ app.get('/api/settings', async (req, res) => {
 });
 
 // Route to update application settings (for live updates)
-app.post('/api/settings', async (req, res) => {
+app.post('/api/settings', requireAuth, async (req, res) => {
     try {
         const {
             defaultTheme,
@@ -534,7 +585,7 @@ app.post('/api/settings', async (req, res) => {
 });
 
 // Route to reset settings to defaults
-app.post('/api/settings/reset', async (req, res) => {
+app.post('/api/settings/reset', requireAuth, async (req, res) => {
     try {
         // Reset to environment defaults
         APP_SETTINGS.defaultTheme = process.env.DEFAULT_THEME || 'light';
@@ -572,7 +623,7 @@ app.post('/api/settings/reset', async (req, res) => {
 });
 
 // Serve frontend application
-app.get('/', (req, res) => {
+app.get('/', requireAuth, (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
