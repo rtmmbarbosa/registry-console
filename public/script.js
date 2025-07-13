@@ -1243,8 +1243,6 @@ async function toggleTheme() {
         if (themeSelect) {
             themeSelect.value = newTheme;
         }
-        
-        showToast(`Theme changed to ${newTheme}`, 'success');
     } else {
         // If server update fails, revert theme
         applyTheme(currentTheme);
