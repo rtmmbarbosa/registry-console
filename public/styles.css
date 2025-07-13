@@ -1,4 +1,4 @@
-/* Reset and Base Styles */
+
 * {
     margin: 0;
     padding: 0;
@@ -61,8 +61,6 @@
     --shadow-tertiary: var(--shadow-dark);
     --border-color: var(--linen);
 }
-
-/* Dark Mode Theme */
 [data-theme="dark"] {
     --bg-primary: var(--dark-bg-primary);
     --bg-secondary: var(--dark-bg-secondary);
@@ -92,14 +90,10 @@ body {
     overflow: hidden;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-/* App Container */
 .app-container {
     display: flex;
     height: 100vh;
 }
-
-/* Sidebar */
 .sidebar {
     width: 320px;
     background: linear-gradient(180deg, var(--sidebar-gradient-start) 0%, var(--sidebar-gradient-end) 100%);
@@ -148,8 +142,6 @@ body {
     font-weight: 300;
     color: var(--text-secondary);
 }
-
-/* Navigation Menu */
 .nav-menu {
     flex: 1;
     padding: 20px 0;
@@ -208,8 +200,6 @@ body {
     font-weight: 500;
     letter-spacing: 0.5px;
 }
-
-/* Page System */
 .page {
     display: none;
     flex: 1;
@@ -220,8 +210,6 @@ body {
 .page.active {
     display: flex;
 }
-
-/* Main Content */
 .main-content {
     flex: 1;
     overflow: hidden;
@@ -247,16 +235,12 @@ body {
     font-weight: 600;
     flex: 1;
 }
-
-/* Header Actions */
 .header-actions {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-left: auto;
 }
-
-/* Icon-only buttons */
 .icon-only {
     width: 40px;
     height: 40px;
@@ -284,8 +268,6 @@ body {
     transform: translateY(0);
     box-shadow: 0 1px 2px var(--shadow-primary);
 }
-
-/* Loading animation for refresh button */
 .refresh-btn.loading svg {
     animation: spin 1s linear infinite;
 }
@@ -299,8 +281,6 @@ body {
 .loading.show {
     display: block;
 }
-
-/* Content Layout */
 .content-layout {
     display: flex;
     flex: 1;
@@ -324,8 +304,6 @@ body {
     flex-direction: column;
     gap: 30px;
 }
-
-/* Repositories List */
 .repositories-list {
     display: flex;
     flex-direction: column;
@@ -350,8 +328,6 @@ body {
     border-color: var(--accent);
     background: var(--bg-primary);
 }
-
-/* Repository highlighting effect */
 .repository-item.highlighted {
     animation: highlightRepository 3s ease-out;
     border-color: var(--accent);
@@ -433,8 +409,6 @@ body {
     color: var(--text-primary);
     font-size: 0.9em;
 }
-
-/* Details Panel */
 .details-content {
     background: var(--bg-secondary);
     border-radius: 8px;
@@ -608,8 +582,6 @@ body {
     color: var(--text-secondary);
     font-size: 0.9em;
 }
-
-/* Quick Stats */
 .quick-stats {
     background: var(--bg-secondary);
     border-radius: 8px;
@@ -647,8 +619,6 @@ body {
     color: var(--text-secondary);
     margin-top: 5px;
 }
-
-/* Statistics Page */
 .statistics-content {
     padding: 30px;
     background: var(--bg-secondary);
@@ -686,8 +656,6 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-
-/* Repository Stats List */
 .repo-stats-list {
     background: var(--bg-secondary);
     border: 1px solid var(--bg-tertiary);
@@ -718,8 +686,6 @@ body {
     font-size: 0.9em;
     color: var(--text-secondary);
 }
-
-/* Buttons */
 .btn {
     border: none;
     border-radius: 6px;
@@ -768,8 +734,6 @@ body {
     background: var(--bg-tertiary);
     color: var(--text-primary);
 }
-
-/* Copy Button */
 .btn-copy {
     background: var(--bg-primary);
     color: var(--text-primary);
@@ -789,8 +753,6 @@ body {
     background: var(--bg-tertiary);
     color: var(--text-primary);
 }
-
-/* Docker Pull Command */
 .docker-pull-command {
     margin: 10px 0;
 }
@@ -815,8 +777,6 @@ body {
     padding: 0;
     word-break: break-all;
 }
-
-/* Loading animation for new icon-only refresh button */
 .refresh-btn.loading svg {
     animation: spin 1s linear infinite;
 }
@@ -849,8 +809,6 @@ body {
     font-weight: 500;
 }
 */
-
-/* Analytics Page Styles */
 .analytics-content {
     display: flex;
     flex-direction: column;
@@ -952,16 +910,12 @@ body {
     width: 100%;
     max-width: none;
 }
-
-/* Top Row: Top Repositories and Advanced Metrics side by side */
 .analytics-top-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     width: 100%;
 }
-
-/* Bottom Row: Size Distribution Pie Chart full width */
 .analytics-bottom-row {
     display: flex;
     width: 100%;
@@ -1106,8 +1060,6 @@ body {
     gap: 10px;
     margin-bottom: 4px;
 }
-
-/* Progress Bar Styles for Top Consumers */
 .repo-progress {
     margin-top: 4px;
     width: 100%;
@@ -1161,8 +1113,6 @@ body {
         left: 100%;
     }
 }
-
-/* Animation delay for staggered effect */
 .repo-item:nth-child(1) .progress-fill {
     animation-delay: 0.1s;
 }
@@ -1200,8 +1150,6 @@ body {
     animation: spin 1s linear infinite;
     margin-left: 10px;
 }
-
-/* Size Distribution Chart */
 .size-chart {
     display: flex;
     flex-direction: column;
@@ -1267,8 +1215,6 @@ body {
     color: var(--text-secondary);
     font-size: 0.9em;
 }
-
-/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -1315,8 +1261,6 @@ body {
     justify-content: flex-end;
     margin-top: 20px;
 }
-
-/* Toast */
 .toast {
     position: fixed;
     top: 20px;
@@ -1360,8 +1304,6 @@ body {
     background: #e74c3c;
     border-left-color: #c0392b;
 }
-
-/* Dark Theme Support */
 .dark-theme {
     --bg-primary: #1a1a1a;
     --bg-secondary: #2d2d2d;
@@ -1391,8 +1333,6 @@ body {
     background: rgba(255, 255, 255, 0.2);
     color: #ffffff;
 }
-
-/* Loading Animation Enhancement */
 .loading-chart {
     display: flex;
     align-items: center;
@@ -1412,8 +1352,6 @@ body {
     animation: spin 1s linear infinite;
     margin-left: 10px;
 }
-
-/* Page Transition Effects */
 .page {
     animation: fadeIn 0.3s ease-in-out;
 }
@@ -1428,8 +1366,6 @@ body {
         transform: translateY(0);
     }
 }
-
-/* Enhanced Button Styles */
 .btn {
     position: relative;
     overflow: hidden;
@@ -1450,8 +1386,6 @@ body {
 .btn:hover::before {
     left: 100%;
 }
-
-/* Enhanced Card Animations */
 .overview-card {
     animation: slideInUp 0.5s ease-out;
 }
@@ -1471,8 +1405,6 @@ body {
         transform: translateY(0);
     }
 }
-
-/* Enhanced Loading States */
 .refresh-btn.loading {
     opacity: 0.7;
     pointer-events: none;
@@ -1481,8 +1413,6 @@ body {
 .refresh-btn.loading svg {
     animation: spin 1s linear infinite;
 }
-
-/* Improved Scrollbar Styling */
 .analytics-left::-webkit-scrollbar,
 .analytics-right::-webkit-scrollbar {
     width: 6px;
@@ -1504,8 +1434,6 @@ body {
 .analytics-right::-webkit-scrollbar-thumb:hover {
     background: var(--accent-color);
 }
-
-/* Responsive Improvements */
 @media (min-width: 1200px) {
     .analytics-overview {
         grid-template-columns: repeat(4, 1fr);
@@ -1626,8 +1554,6 @@ body {
         min-width: auto;
     }
 }
-
-/* Responsive Design for New Layout */
 @media (max-width: 1024px) {
     .analytics-top-row {
         grid-template-columns: 1fr;
@@ -1711,8 +1637,6 @@ body {
         padding: 4px 8px;
     }
 }
-
-/* Enhanced Focus States */
 .nav-item:focus {
     outline: 2px solid var(--accent-color);
     outline-offset: 2px;
@@ -1723,8 +1647,6 @@ body {
     border-color: var(--accent-color);
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
-
-/* Accessibility Improvements */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -1734,8 +1656,6 @@ body {
         transition-duration: 0.01ms !important;
     }
 }
-
-/* Print Styles */
 @media print {
     .sidebar,
     .nav-menu,
@@ -1752,8 +1672,6 @@ body {
         display: block !important;
     }
 }
-
-/* Pie Chart Container */
 .pie-chart-container {
     display: flex;
     flex-direction: column;
@@ -1873,8 +1791,6 @@ body {
     color: var(--text-secondary);
     font-weight: 500;
 }
-
-/* Animação para o pie chart */
 @keyframes pieChartGrow {
     from {
         transform: scale(0);
@@ -1889,8 +1805,6 @@ body {
 .pie-chart {
     animation: pieChartGrow 0.8s ease-out;
 }
-
-/* Special handling for largest repository card to allow proper text display */
 .largest-repo-card {
     min-height: 100px !important;
     align-items: center !important;
@@ -1919,8 +1833,6 @@ body {
     padding: 0 !important;
     margin-bottom: 5px !important;
 }
-
-/* Responsive adjustments for largest repository card */
 @media (max-width: 1199px) {
     .largest-repo-card .card-value {
         font-size: 1.1em !important;
@@ -1941,8 +1853,6 @@ body {
         line-height: 1.5 !important;
     }
 }
-
-/* Additional styles for largest-repo class when applied dynamically */
 .card-value.largest-repo {
     font-size: 1.2em !important;
     line-height: 1.3 !important;
@@ -1957,8 +1867,6 @@ body {
     padding: 0 !important;
     margin-bottom: 5px !important;
 }
-
-/* Responsive adjustments for .largest-repo class */
 @media (max-width: 1199px) {
     .card-value.largest-repo {
         font-size: 1.1em !important;
@@ -1979,8 +1887,6 @@ body {
         line-height: 1.5 !important;
     }
 }
-
-/* Settings Page Styles */
 .settings-content {
     padding: 30px;
     max-width: 1200px;
@@ -2114,8 +2020,6 @@ body {
 .setting-item select:focus {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%233498db' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
 }
-
-/* Dropdown option styles for better visibility */
 .setting-item select option {
     background: var(--bg-secondary);
     color: var(--text-primary);
@@ -2123,14 +2027,10 @@ body {
     font-size: 1em;
     border: none;
 }
-
-/* Dark mode specific option styles */
 [data-theme="dark"] .setting-item select option {
     background: var(--bg-secondary);
     color: var(--text-primary);
 }
-
-/* Ensure options are visible in both themes */
 .setting-item select option:hover {
     background: var(--surface);
     color: var(--text-primary);
@@ -2205,8 +2105,6 @@ body {
     color: var(--bg-primary);
     border-color: var(--accent);
 }
-
-/* Enhanced button text visibility */
 .settings-actions .btn {
     text-decoration: none;
     text-align: center;
@@ -2216,8 +2114,6 @@ body {
     gap: 8px;
     white-space: nowrap;
 }
-
-/* Button text colors for better visibility */
 .settings-actions .btn-secondary {
     color: var(--text-primary);
 }
@@ -2233,8 +2129,6 @@ body {
     color: var(--danger);
     border-color: var(--danger);
 }
-
-/* Dark mode button adjustments */
 [data-theme="dark"] .settings-actions .btn {
     background: var(--bg-secondary);
     color: var(--text-primary);
@@ -2270,8 +2164,6 @@ body {
     color: var(--danger);
     border-color: var(--danger);
 }
-
-/* Settings Page Animations */
 .settings-section {
     animation: slideInFromLeft 0.6s ease-out;
 }
@@ -2290,8 +2182,6 @@ body {
         transform: translateX(0);
     }
 }
-
-/* Settings Form Helper Text */
 .setting-item .help-text {
     font-size: 0.85em;
     color: var(--text-secondary);
@@ -2299,8 +2189,6 @@ body {
     margin-top: 5px;
     font-style: italic;
 }
-
-/* Settings Status Indicators */
 .setting-item .status-indicator {
     position: absolute;
     right: 12px;
@@ -2328,8 +2216,6 @@ body {
     opacity: 1;
     background: var(--warning);
 }
-
-/* Responsive Design for Settings */
 @media (max-width: 768px) {
     .settings-content {
         padding: 20px;
@@ -2394,8 +2280,6 @@ body {
         gap: 10px;
     }
 }
-
-/* Dark Mode Adjustments for Settings */
 [data-theme="dark"] .setting-item input,
 [data-theme="dark"] .setting-item select {
     background: var(--bg-primary);
@@ -2414,8 +2298,6 @@ body {
     background: var(--bg-tertiary);
     color: var(--text-secondary);
 }
-
-/* Dark mode dropdown arrow - override the light mode arrow */
 [data-theme="dark"] .setting-item select {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23d0c4b0' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
     background-position: right 12px center !important;
@@ -2429,8 +2311,6 @@ body {
     background-repeat: no-repeat !important;
     background-size: 16px !important;
 }
-
-/* Settings Page Enhancement: Icon Support */
 .settings-section.registry-config h3::before {
     background: linear-gradient(135deg, #3498db, #2980b9);
 }
@@ -2446,8 +2326,6 @@ body {
 .settings-section.settings-management h3::before {
     background: linear-gradient(135deg, #f39c12, #e67e22);
 }
-
-/* Settings Page Enhancement: Better Visual Hierarchy */
 .settings-content::before {
     content: '';
     position: absolute;
@@ -2462,5 +2340,3 @@ body {
 .settings-content {
     position: relative;
 }
-
-/* End of file */

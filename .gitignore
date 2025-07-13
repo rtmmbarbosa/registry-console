@@ -1,16 +1,41 @@
+# Dependencies
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .npm
+
+# Environment files
 .env
 .env.local
 .env.production
+.env.backup
+
+# Operating System
 .DS_Store
-*.tgz
-*.tar.gz
-.nyc_output
-coverage/
+Thumbs.db
+
+# Development tools
 .vscode/
 .idea/
+
+# Logs
 *.log
+logs/
+
+# Build artifacts
+dist/
+build/
+.nyc_output
+coverage/
+
+# Archive files
+*.tgz
+*.tar.gz
+
+# Temporary files
+.tmp/
+temp/
+
+# Test files
+public/test-*

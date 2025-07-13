@@ -1,17 +1,26 @@
 {
-  "name": "registryconsole",
-  "version": "1.0.0",
-  "description": "Modern web interface for Docker Registry management",
+  "name": "registry-console",
+  "version": "2.0.0",
+  "description": "Production-ready Docker Registry management interface with environment-based configuration",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "build": "echo 'Build completed'",
-    "test": "echo 'No tests specified'"
+    "dev": "nodemon server.js"
   },
-  "keywords": ["docker", "registry", "ui", "management"],
+  "keywords": [
+    "docker",
+    "registry",
+    "ui",
+    "management", 
+    "container",
+    "production",
+    "environment-config"
+  ],
   "author": "Rúben Barbosa",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",

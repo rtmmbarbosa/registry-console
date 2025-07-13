@@ -1,22 +1,20 @@
 # Registry Console - Configuration Guide
 
-## Environment Variables Configuration
+## Environment Variables
 
-The Registry Console now supports configuration through environment variables, making it ideal for containerized deployments. All settings can be configured without rebuilding the container.
+The Registry Console uses environment variables for all configuration, making it perfect for containerized deployments and different environments.
 
-### Registry Settings
+### Required Settings
 
 ```bash
 REGISTRY_URL=your-registry-url.com
-REGISTRY_USERNAME=your-username
+REGISTRY_USERNAME=your-username  
 REGISTRY_PASSWORD=your-password
 PORT=3000
 NODE_ENV=production
 ```
 
 ### Application Settings
-
-All application settings can be configured via environment variables:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -29,30 +27,18 @@ All application settings can be configured via environment variables:
 | `STATISTICS_EXPORT_ENABLED` | `true` | Enable/disable statistics export |
 | `SETTINGS_EXPORT_ENABLED` | `true` | Enable/disable settings export |
 
-### Usage Examples
+## Quick Setup
 
-#### 1. Basic Setup
 ```bash
-# Copy the template
-cp .env.template .env
+# Copy environment template
+cp .env.example .env
 
-# Edit with your registry details
+# Edit with your configuration
 nano .env
 ```
+## Docker Deployment
 
-#### 2. Docker Compose
-```bash
-# Default configuration
-docker-compose up registry-ui
-
-# Production optimized
-docker-compose --profile production up registry-ui-prod
-
-# Development mode
-docker-compose --profile development up registry-ui-dev
-```
-
-#### 3. Docker Run
+### Basic Docker Run
 ```bash
 docker run -d \
   -p 3000:3000 \
@@ -60,61 +46,60 @@ docker run -d \
   -e REGISTRY_USERNAME=admin \
   -e REGISTRY_PASSWORD=secret \
   -e DEFAULT_THEME=dark \
-  -e AUTO_REFRESH_INTERVAL=600000 \
   -e CACHE_ENABLED=true \
   registry-console
 ```
 
-### API Endpoints
+### Docker Compose
+```bash
+# Default configuration
+docker-compose up -d
 
-The application provides REST API endpoints for runtime configuration:
+# Production optimized
+docker-compose --profile production up -d
+
+# Development mode  
+docker-compose --profile development up -d
+```
+
+## Runtime API
+
+The application provides REST API endpoints for live configuration:
 
 - `GET /api/settings` - Get current settings
-- `POST /api/settings` - Update settings
-- `POST /api/settings/reset` - Reset to defaults
+- `POST /api/settings` - Update settings in real-time
+- `POST /api/settings/reset` - Reset to environment defaults
 
-#### Example API Usage
+### API Examples
 
 ```bash
 # Get current settings
 curl http://localhost:3000/api/settings
 
-# Update settings
+# Update theme and refresh interval
 curl -X POST http://localhost:3000/api/settings \
   -H "Content-Type: application/json" \
   -d '{"defaultTheme": "dark", "autoRefreshInterval": 600000}'
 
-# Reset to defaults
+# Reset to environment defaults
 curl -X POST http://localhost:3000/api/settings/reset
 ```
 
-### Configuration for Different Environments
+## Environment Examples
 
-#### Production Environment
-```bash
+### Production Configuration
+```env
 DEFAULT_THEME=dark
-AUTO_REFRESH_INTERVAL=600000  # 10 minutes
-AUTO_REFRESH_ENABLED=true
-NOTIFICATIONS_ENABLED=true
+AUTO_REFRESH_INTERVAL=600000
 CACHE_ENABLED=true
-CACHE_TTL=900000             # 15 minutes
-STATISTICS_EXPORT_ENABLED=true
-SETTINGS_EXPORT_ENABLED=false  # Disable in production
-```
-
-#### Development Environment
-```bash
-DEFAULT_THEME=light
-AUTO_REFRESH_INTERVAL=60000   # 1 minute
-AUTO_REFRESH_ENABLED=true
+CACHE_TTL=900000
 NOTIFICATIONS_ENABLED=true
-CACHE_ENABLED=false          # Disable for development
-STATISTICS_EXPORT_ENABLED=true
-SETTINGS_EXPORT_ENABLED=true
+SETTINGS_EXPORT_ENABLED=false
 ```
 
-#### Resource-Constrained Environment
-```bash
+### Development Configuration  
+### Resource-Constrained Configuration
+```env
 DEFAULT_THEME=light
 AUTO_REFRESH_ENABLED=false
 NOTIFICATIONS_ENABLED=false
@@ -123,7 +108,7 @@ STATISTICS_EXPORT_ENABLED=false
 SETTINGS_EXPORT_ENABLED=false
 ```
 
-### Kubernetes Deployment
+## Kubernetes Deployment
 
 ```yaml
 apiVersion: apps/v1
@@ -160,30 +145,16 @@ spec:
               key: password
         - name: DEFAULT_THEME
           value: "dark"
-        - name: AUTO_REFRESH_INTERVAL
-          value: "600000"
         - name: CACHE_ENABLED
           value: "true"
-        - name: CACHE_TTL
-          value: "900000"
 ```
 
-### Features
+## Features
 
-- ✅ **Environment Variable Configuration** - All settings configurable via environment variables
-- ✅ **Runtime Settings API** - Update settings without restart
-- ✅ **Modern UI** - Stylized settings page with dark/light theme support
-- ✅ **Caching System** - Configurable cache with TTL
-- ✅ **Auto-refresh** - Configurable automatic refresh intervals
-- ✅ **Export Functions** - Statistics and settings export
-- ✅ **Container-friendly** - Perfect for Docker, Kubernetes, and other container platforms
-
-### Migration Notes
-
-The application has been migrated from localStorage-based settings to environment variable-based configuration. This change provides:
-
-1. **Better Container Support** - Settings persist across container restarts
-2. **Environment-specific Configuration** - Different settings for dev/prod
-3. **Infrastructure as Code** - Settings managed through deployment scripts
-4. **Security** - Sensitive settings can be managed through secrets
-5. **Scalability** - Consistent configuration across multiple instances
+- ✅ Environment variable configuration
+- ✅ Runtime settings API  
+- ✅ Modern responsive UI with themes
+- ✅ Configurable caching system
+- ✅ Auto-refresh with custom intervals
+- ✅ Statistics and settings export
+- ✅ Full container support
