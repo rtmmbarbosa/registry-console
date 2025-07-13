@@ -385,6 +385,11 @@ body {
     margin: 0;
 }
 
+/* Home page specific styling for consistent spacing */
+.page[data-page="home"] {
+    padding-top: 40px;
+}
+
 .main-content {
     flex: 1;
     overflow: hidden;
