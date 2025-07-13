@@ -79,7 +79,7 @@ function loadPageData(pageId) {
             loadStatistics();
             break;
         case 'settings':
-            // Load settings data
+            loadSettingsData();
             break;
     }
 }
@@ -690,25 +690,6 @@ async function refreshStatistics() {
     }
 }
 
-// Theme functions
-function toggleTheme() {
-    const currentTheme = localStorage.getItem('registryConsoleTheme') || 'light';
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    localStorage.setItem('registryConsoleTheme', newTheme);
-    applyTheme(newTheme);
-}
-
-function applyTheme(theme) {
-    const root = document.documentElement;
-    
-    if (theme === 'dark') {
-        root.classList.add('dark-theme');
-    } else {
-        root.classList.remove('dark-theme');
-    }
-}
-
 // Utilities
 function showLoading(type) {
     if (type === 'repos' && elements.loadingRepos) {
@@ -763,9 +744,8 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
     setupNavigation();
     
-    // Initialize theme
-    const savedTheme = localStorage.getItem('registryConsoleTheme') || 'light';
-    applyTheme(savedTheme);
+    // Initialize settings system
+    initializeSettings();
     
     // Initialize with home page
     switchPage('home');
@@ -817,4 +797,417 @@ function navigateToRepository(repoName) {
             showToast('Error loading repository details', 'error');
         }
     }, 300); // Wait for page transition
+}
+
+// ===== SETTINGS MANAGEMENT SYSTEM =====
+
+// Server-side settings cache
+let serverSettings = null;
+let autoRefreshTimer = null;
+
+// Settings management functions
+async function getServerSettings() {
+    try {
+        const response = await fetch('/api/settings');
+        const data = await response.json();
+        
+        if (response.ok) {
+            serverSettings = data;
+            return data;
+        } else {
+            throw new Error(data.error || 'Failed to load settings');
+        }
+    } catch (error) {
+        console.error('Error loading server settings:', error);
+        showToast('Error loading settings', 'error');
+        
+        // Return default fallback settings
+        return {
+            defaultTheme: 'light',
+            autoRefreshInterval: 300000,
+            autoRefreshEnabled: true,
+            notificationsEnabled: true,
+            cacheEnabled: true,
+            cacheTTL: 300000,
+            statisticsExportEnabled: true,
+            settingsExportEnabled: true,
+            registryUrl: 'Unknown'
+        };
+    }
+}
+
+async function updateServerSettings(newSettings) {
+    try {
+        const response = await fetch('/api/settings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newSettings)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            serverSettings = data.currentSettings;
+            showToast('Settings updated successfully', 'success');
+            return data;
+        } else {
+            throw new Error(data.error || 'Failed to update settings');
+        }
+    } catch (error) {
+        console.error('Error updating server settings:', error);
+        showToast('Error updating settings: ' + error.message, 'error');
+        return null;
+    }
+}
+
+async function resetServerSettings() {
+    try {
+        const response = await fetch('/api/settings/reset', {
+            method: 'POST'
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            serverSettings = data.currentSettings;
+            showToast('Settings reset to defaults', 'success');
+            return data;
+        } else {
+            throw new Error(data.error || 'Failed to reset settings');
+        }
+    } catch (error) {
+        console.error('Error resetting settings:', error);
+        showToast('Error resetting settings: ' + error.message, 'error');
+        return null;
+    }
+}
+
+async function loadSettingsData() {
+    const settings = await getServerSettings();
+    
+    // Load registry URL
+    const registryUrlInput = document.getElementById('registryUrl');
+    if (registryUrlInput) {
+        registryUrlInput.value = settings.registryUrl;
+        registryUrlInput.placeholder = settings.registryUrl;
+    }
+    
+    // Load refresh interval
+    const refreshIntervalSelect = document.getElementById('refreshInterval');
+    if (refreshIntervalSelect) {
+        refreshIntervalSelect.value = settings.autoRefreshInterval;
+        refreshIntervalSelect.addEventListener('change', handleRefreshIntervalChange);
+    }
+    
+    // Load theme
+    const themeSelect = document.getElementById('themeSelect');
+    if (themeSelect) {
+        themeSelect.value = settings.defaultTheme;
+        themeSelect.addEventListener('change', handleThemeChange);
+    }
+    
+    // Apply current settings
+    applySettings(settings);
+}
+
+// Helper function to show setting status
+function showSettingStatus(settingElement, status) {
+    const indicator = settingElement.querySelector('.status-indicator');
+    if (indicator) {
+        indicator.className = `status-indicator ${status}`;
+    }
+}
+
+// Enhanced settings handlers with visual feedback
+async function handleRefreshIntervalChange(event) {
+    const newInterval = parseInt(event.target.value);
+    const settingItem = event.target.closest('.setting-item');
+    
+    const updateResult = await updateServerSettings({
+        autoRefreshInterval: newInterval,
+        autoRefreshEnabled: newInterval > 0
+    });
+    
+    if (updateResult) {
+        setupAutoRefresh(newInterval);
+        showSettingStatus(settingItem, 'success');
+    } else {
+        showSettingStatus(settingItem, 'error');
+        // Revert the select to previous value
+        event.target.value = serverSettings?.autoRefreshInterval || 300000;
+    }
+}
+
+async function handleThemeChange(event) {
+    const newTheme = event.target.value;
+    const settingItem = event.target.closest('.setting-item');
+    
+    const updateResult = await updateServerSettings({
+        defaultTheme: newTheme
+    });
+    
+    if (updateResult) {
+        applyTheme(newTheme);
+        showSettingStatus(settingItem, 'success');
+    } else {
+        showSettingStatus(settingItem, 'error');
+        // Revert the select to previous value
+        event.target.value = serverSettings?.defaultTheme || 'light';
+    }
+}
+
+function applySettings(settings) {
+    // Apply theme
+    applyTheme(settings.defaultTheme);
+    
+    // Setup auto-refresh
+    if (settings.autoRefreshEnabled) {
+        setupAutoRefresh(settings.autoRefreshInterval);
+    }
+}
+
+function setupAutoRefresh(intervalMs) {
+    // Clear existing timer
+    if (autoRefreshTimer) {
+        clearInterval(autoRefreshTimer);
+        autoRefreshTimer = null;
+    }
+    
+    // Setup new timer if interval is greater than 0
+    if (intervalMs > 0) {
+        autoRefreshTimer = setInterval(() => {
+            console.log('Auto-refresh triggered');
+            refreshData();
+        }, intervalMs);
+        
+        console.log(`Auto-refresh set to ${intervalMs / 1000} seconds`);
+    } else {
+        console.log('Auto-refresh disabled');
+    }
+}
+
+async function loadRegistryUrl() {
+    try {
+        const response = await fetch('/api/config');
+        const data = await response.json();
+        
+        const registryUrlInput = document.getElementById('registryUrl');
+        if (registryUrlInput && data.registryUrl) {
+            registryUrlInput.value = data.registryUrl;
+            registryUrlInput.placeholder = data.registryUrl;
+        }
+    } catch (error) {
+        console.error('Error loading registry URL:', error);
+        const registryUrlInput = document.getElementById('registryUrl');
+        if (registryUrlInput) {
+            registryUrlInput.placeholder = 'Error loading URL';
+        }
+    }
+}
+
+// Cache management functions
+async function clearStatisticsCache() {
+    try {
+        const response = await fetch('/api/stats/refresh', { method: 'POST' });
+        const data = await response.json();
+        
+        if (response.ok) {
+            showToast('Statistics cache cleared successfully', 'success');
+            // Refresh statistics if on analytics page
+            if (currentPage === 'analytics') {
+                await loadStatistics();
+            }
+        } else {
+            throw new Error(data.error || 'Failed to clear cache');
+        }
+    } catch (error) {
+        console.error('Error clearing cache:', error);
+        showToast('Error clearing cache: ' + error.message, 'error');
+    }
+}
+
+async function exportStatistics() {
+    try {
+        // First get the current statistics
+        const response = await fetch('/api/stats');
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to fetch statistics');
+        }
+        
+        // Create export data
+        const exportData = {
+            exportDate: new Date().toISOString(),
+            registryUrl: registryConfig?.registryUrl || 'Unknown',
+            statistics: data,
+            metadata: {
+                version: '1.0.0',
+                generator: 'RegistryConsole',
+                format: 'JSON'
+            }
+        };
+        
+        // Create and download file
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `registry-statistics-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast('Statistics exported successfully', 'success');
+    } catch (error) {
+        console.error('Error exporting statistics:', error);
+        showToast('Error exporting statistics: ' + error.message, 'error');
+    }
+}
+
+// Enhanced theme functions
+async function toggleTheme() {
+    const currentTheme = serverSettings?.defaultTheme || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    const updateResult = await updateServerSettings({
+        defaultTheme: newTheme
+    });
+    
+    if (updateResult) {
+        applyTheme(newTheme);
+        
+        // Update theme select if on settings page
+        const themeSelect = document.getElementById('themeSelect');
+        if (themeSelect) {
+            themeSelect.value = newTheme;
+        }
+        
+        showToast(`Theme changed to ${newTheme}`, 'success');
+    }
+}
+
+function applyTheme(theme) {
+    const root = document.documentElement;
+    
+    if (theme === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+        root.classList.add('dark-theme');
+    } else if (theme === 'light') {
+        root.setAttribute('data-theme', 'light');
+        root.classList.remove('dark-theme');
+    } else if (theme === 'auto') {
+        // Auto theme based on system preference
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (systemPrefersDark) {
+            root.setAttribute('data-theme', 'dark');
+            root.classList.add('dark-theme');
+        } else {
+            root.setAttribute('data-theme', 'light');
+            root.classList.remove('dark-theme');
+        }
+    }
+}
+
+// Settings reset function
+async function resetSettings() {
+    if (confirm('Are you sure you want to reset all settings to default values?')) {
+        const result = await resetServerSettings();
+        if (result) {
+            // Reload settings in the UI
+            await loadSettingsData();
+        }
+    }
+}
+
+// Settings import/export (using server settings)
+async function exportSettings() {
+    try {
+        const settings = await getServerSettings();
+        const exportData = {
+            exportDate: new Date().toISOString(),
+            version: '1.0.0',
+            settings: settings
+        };
+        
+        const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `registry-console-settings-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast('Settings exported successfully', 'success');
+    } catch (error) {
+        console.error('Error exporting settings:', error);
+        showToast('Error exporting settings: ' + error.message, 'error');
+    }
+}
+
+async function importSettings() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const importData = JSON.parse(e.target.result);
+                    
+                    if (importData.settings) {
+                        // Update server settings with imported data
+                        const updateResult = await updateServerSettings(importData.settings);
+                        
+                        if (updateResult) {
+                            await loadSettingsData();
+                            showToast('Settings imported successfully', 'success');
+                        }
+                    } else {
+                        throw new Error('Invalid settings file format');
+                    }
+                } catch (error) {
+                    console.error('Error importing settings:', error);
+                    showToast('Error importing settings: ' + error.message, 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+    };
+    
+    input.click();
+}
+
+// Initialize settings on page load
+async function initializeSettings() {
+    try {
+        const settings = await getServerSettings();
+        
+        // Apply settings
+        applySettings(settings);
+        
+        // Load registry config
+        registryConfig = { registryUrl: settings.registryUrl };
+        
+        console.log('⚙️ Settings initialized from server:', settings);
+    } catch (error) {
+        console.error('Error initializing settings:', error);
+        
+        // Fallback to default settings
+        const defaultSettings = {
+            defaultTheme: 'light',
+            autoRefreshInterval: 300000,
+            autoRefreshEnabled: true
+        };
+        
+        applySettings(defaultSettings);
+    }
 }

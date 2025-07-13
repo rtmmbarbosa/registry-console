@@ -729,6 +729,13 @@ body {
     font-weight: 500;
     transition: all 0.2s ease;
     margin: 2px;
+    text-decoration: none;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
 }
 
 .btn-danger {
@@ -1971,6 +1978,489 @@ body {
         font-size: 0.95em !important;
         line-height: 1.5 !important;
     }
+}
+
+/* Settings Page Styles */
+.settings-content {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--bg-primary);
+    min-height: 100%;
+    overflow-y: auto;
+}
+
+.settings-section {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 12px var(--shadow-primary);
+    transition: all 0.3s ease;
+}
+
+.settings-section:hover {
+    box-shadow: 0 4px 20px var(--shadow-secondary);
+    transform: translateY(-2px);
+}
+
+.settings-section h3 {
+    color: var(--text-primary);
+    font-size: 1.4em;
+    font-weight: 600;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+}
+
+.settings-section h3::before {
+    content: '';
+    width: 4px;
+    height: 24px;
+    background: linear-gradient(135deg, var(--accent), var(--surface));
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    align-items: start;
+}
+
+.setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+}
+
+.setting-item label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95em;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.setting-item label::after {
+    content: '';
+    width: 2px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 1px;
+    opacity: 0.6;
+}
+
+.setting-item input,
+.setting-item select {
+    padding: 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 1em;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px var(--shadow-primary);
+}
+
+.setting-item input:focus,
+.setting-item select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--text-secondary-rgb), 0.1),
+                inset 0 1px 3px var(--shadow-primary);
+}
+
+.setting-item input:hover,
+.setting-item select:hover {
+    border-color: var(--surface);
+    box-shadow: 0 2px 8px var(--shadow-primary),
+                inset 0 1px 3px var(--shadow-primary);
+}
+
+.setting-item input[readonly] {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.setting-item input[readonly]:focus {
+    border-color: var(--border-color);
+    box-shadow: inset 0 1px 3px var(--shadow-primary);
+    transform: none;
+}
+
+.setting-item select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.setting-item select:focus {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%233498db' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+}
+
+/* Dropdown option styles for better visibility */
+.setting-item select option {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    font-size: 1em;
+    border: none;
+}
+
+/* Dark mode specific option styles */
+[data-theme="dark"] .setting-item select option {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* Ensure options are visible in both themes */
+.setting-item select option:hover {
+    background: var(--surface);
+    color: var(--text-primary);
+}
+
+.setting-item select option:checked,
+.setting-item select option:selected {
+    background: var(--accent);
+    color: var(--bg-primary);
+    font-weight: 600;
+}
+
+.settings-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.settings-actions .btn {
+    padding: 12px 24px;
+    font-size: 1em;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 160px;
+    box-shadow: 0 2px 6px var(--shadow-primary);
+}
+
+.settings-actions .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.settings-actions .btn:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px var(--shadow-secondary);
+}
+
+.settings-actions .btn:hover::before {
+    left: 100%;
+}
+
+.settings-actions .btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px var(--shadow-primary);
+}
+
+.settings-actions .btn-secondary {
+    background: var(--surface);
+    color: var(--text-primary);
+    border-color: var(--accent);
+}
+
+.settings-actions .btn-secondary:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+}
+
+/* Enhanced button text visibility */
+.settings-actions .btn {
+    text-decoration: none;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+/* Button text colors for better visibility */
+.settings-actions .btn-secondary {
+    color: var(--text-primary);
+}
+
+.settings-actions .btn-danger {
+    background: var(--danger);
+    color: var(--bg-primary);
+    border-color: var(--danger);
+}
+
+.settings-actions .btn-danger:hover {
+    background: var(--bg-primary);
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+/* Dark mode button adjustments */
+[data-theme="dark"] .settings-actions .btn {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .settings-actions .btn:hover {
+    background: var(--surface);
+    color: var(--text-primary);
+    border-color: var(--accent);
+}
+
+[data-theme="dark"] .settings-actions .btn-secondary {
+    background: var(--surface);
+    color: var(--text-primary);
+    border-color: var(--accent);
+}
+
+[data-theme="dark"] .settings-actions .btn-secondary:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+}
+
+[data-theme="dark"] .settings-actions .btn-danger {
+    background: var(--danger);
+    color: var(--bg-primary);
+    border-color: var(--danger);
+}
+
+[data-theme="dark"] .settings-actions .btn-danger:hover {
+    background: var(--bg-primary);
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+/* Settings Page Animations */
+.settings-section {
+    animation: slideInFromLeft 0.6s ease-out;
+}
+
+.settings-section:nth-child(1) { animation-delay: 0.1s; }
+.settings-section:nth-child(2) { animation-delay: 0.2s; }
+.settings-section:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Settings Form Helper Text */
+.setting-item .help-text {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    opacity: 0.8;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Settings Status Indicators */
+.setting-item .status-indicator {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.setting-item.success .status-indicator {
+    opacity: 1;
+    background: var(--success);
+}
+
+.setting-item.error .status-indicator {
+    opacity: 1;
+    background: var(--danger);
+}
+
+.setting-item.warning .status-indicator {
+    opacity: 1;
+    background: var(--warning);
+}
+
+/* Responsive Design for Settings */
+@media (max-width: 768px) {
+    .settings-content {
+        padding: 20px;
+    }
+    
+    .settings-section {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .settings-section h3 {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+    }
+    
+    .settings-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .settings-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .settings-actions .btn {
+        width: 100%;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-content {
+        padding: 15px;
+    }
+    
+    .settings-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .settings-section h3 {
+        font-size: 1.1em;
+        margin-bottom: 15px;
+    }
+    
+    .settings-grid {
+        gap: 15px;
+    }
+    
+    .setting-item input,
+    .setting-item select {
+        padding: 10px 12px;
+        font-size: 0.95em;
+    }
+    
+    .setting-item select {
+        padding-right: 36px;
+    }
+    
+    .settings-actions {
+        gap: 10px;
+    }
+}
+
+/* Dark Mode Adjustments for Settings */
+[data-theme="dark"] .setting-item input,
+[data-theme="dark"] .setting-item select {
+    background: var(--bg-primary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .setting-item input:focus,
+[data-theme="dark"] .setting-item select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--text-secondary-rgb), 0.1),
+                inset 0 1px 3px var(--shadow-primary);
+}
+
+[data-theme="dark"] .setting-item input[readonly] {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+/* Dark mode dropdown arrow - override the light mode arrow */
+[data-theme="dark"] .setting-item select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23d0c4b0' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+    background-position: right 12px center !important;
+    background-repeat: no-repeat !important;
+    background-size: 16px !important;
+}
+
+[data-theme="dark"] .setting-item select:focus {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23b5a390' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+    background-position: right 12px center !important;
+    background-repeat: no-repeat !important;
+    background-size: 16px !important;
+}
+
+/* Settings Page Enhancement: Icon Support */
+.settings-section.registry-config h3::before {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.settings-section.appearance h3::before {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.settings-section.cache-management h3::before {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.settings-section.settings-management h3::before {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+/* Settings Page Enhancement: Better Visual Hierarchy */
+.settings-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--surface), var(--accent));
+    border-radius: 2px;
+}
+
+.settings-content {
+    position: relative;
 }
 
 /* End of file */

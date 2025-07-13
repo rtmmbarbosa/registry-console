@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Textos Settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            padding: 20px;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            z-index: 1000;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+        }
+        
+        .test-section h2 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .element-test {
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .element-test h3 {
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .element-test p {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        🌓 Alternar Tema
+    </button>
+
+    <h1 style="color: var(--text-primary); text-align: center; margin-bottom: 40px;">
+        Teste de Visibilidade - Textos Settings
+    </h1>
+
+    <div class="test-section">
+        <h2>Dropdowns / Selects</h2>
+        
+        <div class="element-test">
+            <h3>Tema</h3>
+            <p>Teste de visibilidade das opções do dropdown de tema</p>
+            <div class="setting-item">
+                <label>Theme</label>
+                <select id="themeSelect">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="auto">Auto (System)</option>
+                </select>
+                <div class="help-text">Choose your preferred color theme</div>
+            </div>
+        </div>
+        
+        <div class="element-test">
+            <h3>Auto-refresh Interval</h3>
+            <p>Teste de visibilidade das opções do dropdown de intervalo</p>
+            <div class="setting-item">
+                <label>Auto-refresh Interval</label>
+                <select id="refreshInterval">
+                    <option value="300000">5 minutes</option>
+                    <option value="600000">10 minutes</option>
+                    <option value="900000">15 minutes</option>
+                    <option value="1800000">30 minutes</option>
+                    <option value="0">Disabled</option>
+                </select>
+                <div class="help-text">How often to automatically refresh repository data</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Botões</h2>
+        
+        <div class="element-test">
+            <h3>Botões Secundários</h3>
+            <p>Teste de visibilidade dos textos dos botões secundários</p>
+            <div class="settings-actions">
+                <button class="btn btn-secondary">Clear Statistics Cache</button>
+                <button class="btn btn-secondary">Export Statistics</button>
+                <button class="btn btn-secondary">Export Settings</button>
+                <button class="btn btn-secondary">Import Settings</button>
+            </div>
+        </div>
+        
+        <div class="element-test">
+            <h3>Botão de Perigo</h3>
+            <p>Teste de visibilidade do texto do botão de reset</p>
+            <div class="settings-actions">
+                <button class="btn btn-danger">Reset to Default</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Campos de Input</h2>
+        
+        <div class="element-test">
+            <h3>Input Readonly</h3>
+            <p>Teste de visibilidade do texto em campo readonly</p>
+            <div class="setting-item">
+                <label>Registry URL</label>
+                <input type="text" value="registry.ovh-1.moviik.com" readonly>
+                <div class="help-text">The Docker registry URL being monitored</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Informações do Tema Atual</h2>
+        <div class="element-test">
+            <h3>Status do Tema</h3>
+            <p id="themeStatus">Tema atual: Light Mode</p>
+            <p style="color: var(--text-primary);">Cor principal do texto: var(--text-primary)</p>
+            <p style="color: var(--text-secondary);">Cor secundária do texto: var(--text-secondary)</p>
+            <p style="background: var(--bg-primary); padding: 10px; border-radius: 4px;">Fundo primário: var(--bg-primary)</p>
+            <p style="background: var(--bg-secondary); padding: 10px; border-radius: 4px;">Fundo secundário: var(--bg-secondary)</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            
+            const themeStatus = document.getElementById('themeStatus');
+            themeStatus.textContent = `Tema atual: ${newTheme === 'light' ? 'Light Mode' : 'Dark Mode'}`;
+        }
+        
+        // Initialize theme status
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const themeStatus = document.getElementById('themeStatus');
+            themeStatus.textContent = `Tema atual: ${currentTheme === 'light' ? 'Light Mode' : 'Dark Mode'}`;
+        });
+    </script>
+</body>
+</html>

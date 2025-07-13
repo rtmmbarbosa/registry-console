@@ -255,12 +255,13 @@
                 </div>
                 
                 <div class="settings-content">
-                    <div class="settings-section">
+                    <div class="settings-section registry-config">
                         <h3>Registry Configuration</h3>
                         <div class="settings-grid">
                             <div class="setting-item">
                                 <label>Registry URL</label>
                                 <input type="text" id="registryUrl" readonly placeholder="Loading...">
+                                <div class="help-text">The Docker registry URL being monitored</div>
                             </div>
                             <div class="setting-item">
                                 <label>Auto-refresh Interval</label>
@@ -271,11 +272,13 @@
                                     <option value="1800000">30 minutes</option>
                                     <option value="0">Disabled</option>
                                 </select>
+                                <div class="status-indicator"></div>
+                                <div class="help-text">How often to automatically refresh repository data</div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="settings-section">
+                    <div class="settings-section appearance">
                         <h3>Appearance</h3>
                         <div class="settings-grid">
                             <div class="setting-item">
@@ -285,11 +288,13 @@
                                     <option value="dark">Dark</option>
                                     <option value="auto">Auto (System)</option>
                                 </select>
+                                <div class="status-indicator"></div>
+                                <div class="help-text">Choose your preferred color theme</div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="settings-section">
+                    <div class="settings-section cache-management">
                         <h3>Cache Management</h3>
                         <div class="settings-actions">
                             <button class="btn btn-secondary" onclick="clearStatisticsCache()">
@@ -297,6 +302,21 @@
                             </button>
                             <button class="btn btn-secondary" onclick="exportStatistics()">
                                 Export Statistics
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section settings-management">
+                        <h3>Settings Management</h3>
+                        <div class="settings-actions">
+                            <button class="btn btn-secondary" onclick="exportSettings()">
+                                Export Settings
+                            </button>
+                            <button class="btn btn-secondary" onclick="importSettings()">
+                                Import Settings
+                            </button>
+                            <button class="btn btn-danger" onclick="resetSettings()">
+                                Reset to Default
                             </button>
                         </div>
                     </div>

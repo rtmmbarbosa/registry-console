@@ -18,6 +18,18 @@ const REGISTRY_CONFIG = {
     password: process.env.REGISTRY_PASSWORD
 };
 
+// Application settings configuration
+const APP_SETTINGS = {
+    defaultTheme: process.env.DEFAULT_THEME || 'light',
+    autoRefreshInterval: parseInt(process.env.AUTO_REFRESH_INTERVAL) || 300000,
+    autoRefreshEnabled: process.env.AUTO_REFRESH_ENABLED === 'true',
+    notificationsEnabled: process.env.NOTIFICATIONS_ENABLED === 'true',
+    cacheEnabled: process.env.CACHE_ENABLED === 'true',
+    cacheTTL: parseInt(process.env.CACHE_TTL) || 300000,
+    statisticsExportEnabled: process.env.STATISTICS_EXPORT_ENABLED === 'true',
+    settingsExportEnabled: process.env.SETTINGS_EXPORT_ENABLED === 'true'
+};
+
 // Check if credentials are configured
 if (!REGISTRY_CONFIG.url || !REGISTRY_CONFIG.username || !REGISTRY_CONFIG.password) {
     console.error('❌ Error: Registry credentials not configured in .env');
@@ -28,6 +40,13 @@ console.log('🔐 Registry Configuration:');
 console.log(`   URL: ${REGISTRY_CONFIG.url}`);
 console.log(`   Username: ${REGISTRY_CONFIG.username}`);
 console.log(`   Password: ${REGISTRY_CONFIG.password ? '***' : 'NOT CONFIGURED'}`);
+
+console.log('⚙️  Application Settings:');
+console.log(`   Default Theme: ${APP_SETTINGS.defaultTheme}`);
+console.log(`   Auto-refresh: ${APP_SETTINGS.autoRefreshEnabled ? APP_SETTINGS.autoRefreshInterval + 'ms' : 'disabled'}`);
+console.log(`   Cache: ${APP_SETTINGS.cacheEnabled ? 'enabled (' + APP_SETTINGS.cacheTTL + 'ms TTL)' : 'disabled'}`);
+console.log(`   Notifications: ${APP_SETTINGS.notificationsEnabled ? 'enabled' : 'disabled'}`);
+console.log(`   Export Features: Stats=${APP_SETTINGS.statisticsExportEnabled}, Settings=${APP_SETTINGS.settingsExportEnabled}`);
 
 // Basic authentication function
 function getAuthHeader() {
@@ -215,15 +234,15 @@ app.delete('/api/repositories/:name/manifests/:digest', async (req, res) => {
 let statsCache = {
     data: null,
     timestamp: 0,
-    ttl: 5 * 60 * 1000 // 5 minutes TTL
+    ttl: APP_SETTINGS.cacheTTL
 };
 
 // Route to get statistics
 app.get('/api/stats', async (req, res) => {
     try {
-        // Check cache first
+        // Check cache first (if enabled)
         const now = Date.now();
-        if (statsCache.data && (now - statsCache.timestamp) < statsCache.ttl) {
+        if (APP_SETTINGS.cacheEnabled && statsCache.data && (now - statsCache.timestamp) < statsCache.ttl) {
             console.log('📊 Returning cached statistics');
             return res.json(statsCache.data);
         }
@@ -374,11 +393,15 @@ app.get('/api/stats', async (req, res) => {
             }
         };
 
-        // Cache the results
-        statsCache.data = statsData;
-        statsCache.timestamp = now;
+        // Cache the results (if enabled)
+        if (APP_SETTINGS.cacheEnabled) {
+            statsCache.data = statsData;
+            statsCache.timestamp = now;
+            console.log(`📊 Statistics calculated and cached in ${statsData.metadata.processingTime}ms`);
+        } else {
+            console.log(`📊 Statistics calculated in ${statsData.metadata.processingTime}ms (cache disabled)`);
+        }
         
-        console.log(`📊 Statistics calculated in ${statsData.metadata.processingTime}ms`);
         res.json(statsData);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -422,6 +445,128 @@ app.get('/api/config', async (req, res) => {
         });
     } catch (error) {
         console.error('Error getting config:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Route to get application settings
+app.get('/api/settings', async (req, res) => {
+    try {
+        res.json({
+            defaultTheme: APP_SETTINGS.defaultTheme,
+            autoRefreshInterval: APP_SETTINGS.autoRefreshInterval,
+            autoRefreshEnabled: APP_SETTINGS.autoRefreshEnabled,
+            notificationsEnabled: APP_SETTINGS.notificationsEnabled,
+            cacheEnabled: APP_SETTINGS.cacheEnabled,
+            cacheTTL: APP_SETTINGS.cacheTTL,
+            statisticsExportEnabled: APP_SETTINGS.statisticsExportEnabled,
+            settingsExportEnabled: APP_SETTINGS.settingsExportEnabled,
+            registryUrl: REGISTRY_CONFIG.url
+        });
+    } catch (error) {
+        console.error('Error getting settings:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Route to update application settings (for live updates)
+app.post('/api/settings', async (req, res) => {
+    try {
+        const {
+            defaultTheme,
+            autoRefreshInterval,
+            autoRefreshEnabled,
+            notificationsEnabled,
+            cacheEnabled,
+            cacheTTL
+        } = req.body;
+
+        // Validate inputs
+        const validThemes = ['light', 'dark', 'auto'];
+        if (defaultTheme && !validThemes.includes(defaultTheme)) {
+            return res.status(400).json({ error: 'Invalid theme value' });
+        }
+
+        if (autoRefreshInterval && (autoRefreshInterval < 0 || autoRefreshInterval > 3600000)) {
+            return res.status(400).json({ error: 'Invalid refresh interval (must be 0-3600000ms)' });
+        }
+
+        if (cacheTTL && (cacheTTL < 60000 || cacheTTL > 3600000)) {
+            return res.status(400).json({ error: 'Invalid cache TTL (must be 60000-3600000ms)' });
+        }
+
+        // Update in-memory settings
+        if (defaultTheme !== undefined) APP_SETTINGS.defaultTheme = defaultTheme;
+        if (autoRefreshInterval !== undefined) APP_SETTINGS.autoRefreshInterval = autoRefreshInterval;
+        if (autoRefreshEnabled !== undefined) APP_SETTINGS.autoRefreshEnabled = autoRefreshEnabled;
+        if (notificationsEnabled !== undefined) APP_SETTINGS.notificationsEnabled = notificationsEnabled;
+        if (cacheEnabled !== undefined) APP_SETTINGS.cacheEnabled = cacheEnabled;
+        if (cacheTTL !== undefined) {
+            APP_SETTINGS.cacheTTL = cacheTTL;
+            statsCache.ttl = cacheTTL; // Update cache TTL immediately
+        }
+
+        // Note: In a production environment, you might want to:
+        // 1. Write these changes to a persistent configuration file
+        // 2. Update environment variables dynamically
+        // 3. Restart services if needed
+
+        console.log('⚙️  Settings updated:', req.body);
+
+        res.json({
+            success: true,
+            message: 'Settings updated successfully',
+            currentSettings: {
+                defaultTheme: APP_SETTINGS.defaultTheme,
+                autoRefreshInterval: APP_SETTINGS.autoRefreshInterval,
+                autoRefreshEnabled: APP_SETTINGS.autoRefreshEnabled,
+                notificationsEnabled: APP_SETTINGS.notificationsEnabled,
+                cacheEnabled: APP_SETTINGS.cacheEnabled,
+                cacheTTL: APP_SETTINGS.cacheTTL,
+                statisticsExportEnabled: APP_SETTINGS.statisticsExportEnabled,
+                settingsExportEnabled: APP_SETTINGS.settingsExportEnabled
+            }
+        });
+    } catch (error) {
+        console.error('Error updating settings:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Route to reset settings to defaults
+app.post('/api/settings/reset', async (req, res) => {
+    try {
+        // Reset to environment defaults
+        APP_SETTINGS.defaultTheme = process.env.DEFAULT_THEME || 'light';
+        APP_SETTINGS.autoRefreshInterval = parseInt(process.env.AUTO_REFRESH_INTERVAL) || 300000;
+        APP_SETTINGS.autoRefreshEnabled = process.env.AUTO_REFRESH_ENABLED === 'true';
+        APP_SETTINGS.notificationsEnabled = process.env.NOTIFICATIONS_ENABLED === 'true';
+        APP_SETTINGS.cacheEnabled = process.env.CACHE_ENABLED === 'true';
+        APP_SETTINGS.cacheTTL = parseInt(process.env.CACHE_TTL) || 300000;
+        APP_SETTINGS.statisticsExportEnabled = process.env.STATISTICS_EXPORT_ENABLED === 'true';
+        APP_SETTINGS.settingsExportEnabled = process.env.SETTINGS_EXPORT_ENABLED === 'true';
+
+        // Update cache TTL
+        statsCache.ttl = APP_SETTINGS.cacheTTL;
+
+        console.log('⚙️  Settings reset to defaults');
+
+        res.json({
+            success: true,
+            message: 'Settings reset to defaults successfully',
+            currentSettings: {
+                defaultTheme: APP_SETTINGS.defaultTheme,
+                autoRefreshInterval: APP_SETTINGS.autoRefreshInterval,
+                autoRefreshEnabled: APP_SETTINGS.autoRefreshEnabled,
+                notificationsEnabled: APP_SETTINGS.notificationsEnabled,
+                cacheEnabled: APP_SETTINGS.cacheEnabled,
+                cacheTTL: APP_SETTINGS.cacheTTL,
+                statisticsExportEnabled: APP_SETTINGS.statisticsExportEnabled,
+                settingsExportEnabled: APP_SETTINGS.settingsExportEnabled
+            }
+        });
+    } catch (error) {
+        console.error('Error resetting settings:', error);
         res.status(500).json({ error: error.message });
     }
 });

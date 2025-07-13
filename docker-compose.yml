@@ -3,6 +3,7 @@ version: '3.8'
 services:
   registry-ui:
     build: .
+    container_name: registry-console
     ports:
       - "3000:3000"
     env_file:
@@ -12,6 +13,73 @@ services:
     restart: unless-stopped
     networks:
       - registry-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/settings"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Example: Production configuration with different settings
+  registry-ui-prod:
+    build: .
+    container_name: registry-console-prod
+    ports:
+      - "3001:3000"
+    environment:
+      REGISTRY_URL: ${REGISTRY_URL}
+      REGISTRY_USERNAME: ${REGISTRY_USERNAME}
+      REGISTRY_PASSWORD: ${REGISTRY_PASSWORD}
+      PORT: 3000
+      NODE_ENV: production
+      
+      # Production-optimized settings
+      DEFAULT_THEME: dark
+      AUTO_REFRESH_INTERVAL: 600000    # 10 minutes
+      AUTO_REFRESH_ENABLED: true
+      NOTIFICATIONS_ENABLED: true
+      CACHE_ENABLED: true
+      CACHE_TTL: 900000               # 15 minutes
+      STATISTICS_EXPORT_ENABLED: true
+      SETTINGS_EXPORT_ENABLED: false  # Disable settings export in production
+    
+    restart: unless-stopped
+    networks:
+      - registry-net
+    profiles:
+      - production
+    
+  # Example: Development configuration with different settings
+  registry-ui-dev:
+    build: .
+    container_name: registry-console-dev
+    ports:
+      - "3002:3000"
+    environment:
+      REGISTRY_URL: ${REGISTRY_URL}
+      REGISTRY_USERNAME: ${REGISTRY_USERNAME}
+      REGISTRY_PASSWORD: ${REGISTRY_PASSWORD}
+      PORT: 3000
+      NODE_ENV: development
+      
+      # Development-optimized settings
+      DEFAULT_THEME: light
+      AUTO_REFRESH_INTERVAL: 60000     # 1 minute
+      AUTO_REFRESH_ENABLED: true
+      NOTIFICATIONS_ENABLED: true
+      CACHE_ENABLED: false            # Disable cache for development
+      CACHE_TTL: 300000
+      STATISTICS_EXPORT_ENABLED: true
+      SETTINGS_EXPORT_ENABLED: true
+    
+    restart: unless-stopped
+    networks:
+      - registry-net
+    profiles:
+      - development
+    volumes:
+      - ./public:/app/public      # Mount public folder for development
+      - ./server.js:/app/server.js # Mount server file for development
 
 networks:
   registry-net:
