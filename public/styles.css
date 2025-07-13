@@ -15,16 +15,16 @@
     --light-text-secondary: #5d4e37;
     --light-text-secondary-rgb: 93, 78, 55;
     
-    /* Dark Mode Colors - Harmonized Palette */
-    --dark-bg-primary: #1c1917;      /* Warm dark base */
-    --dark-bg-secondary: #292524;    /* Warm secondary */
-    --dark-bg-tertiary: #3c3836;     /* Warm tertiary */
-    --dark-surface: #44403c;         /* Warm surface */
-    --dark-text-primary: #faf4ed;    /* Warm white */
-    --dark-text-secondary: #d0c4b0;  /* Warm secondary text */
-    --dark-text-secondary-rgb: 208, 196, 176;
-    --dark-accent: #b5a390;          /* Harmonized accent */
-    --dark-border: #57534e;          /* Warm border */
+    /* Dark Mode Colors - Dark Neutral Palette */
+    --dark-bg-primary: #0f0f0f;      /* True dark base */
+    --dark-bg-secondary: #1a1a1a;    /* Dark secondary */
+    --dark-bg-tertiary: #2a2a2a;     /* Dark tertiary */
+    --dark-surface: #333333;         /* Dark surface */
+    --dark-text-primary: #ffffff;    /* Pure white */
+    --dark-text-secondary: #cccccc;  /* Light gray text */
+    --dark-text-secondary-rgb: 204, 204, 204;
+    --dark-accent: #4a9eff;          /* Blue accent */
+    --dark-border: #404040;          /* Dark border */
     
     /* Status Colors */
     --danger: #d4a5a5;
@@ -40,9 +40,9 @@
     --shadow-light: rgba(0, 0, 0, 0.1);
     --shadow-medium: rgba(0, 0, 0, 0.15);
     --shadow-dark: rgba(0, 0, 0, 0.2);
-    --dark-shadow-light: rgba(0, 0, 0, 0.4);
-    --dark-shadow-medium: rgba(0, 0, 0, 0.5);
-    --dark-shadow-dark: rgba(0, 0, 0, 0.6);
+    --dark-shadow-light: rgba(0, 0, 0, 0.6);
+    --dark-shadow-medium: rgba(0, 0, 0, 0.7);
+    --dark-shadow-dark: rgba(0, 0, 0, 0.8);
     
     /* Active Theme Variables (default to light) */
     --bg-primary: var(--baby-powder);
@@ -94,7 +94,7 @@
     /* Login-specific variables for dark theme */
     --primary-color: var(--dark-accent);
     --primary-hover: var(--dark-surface);
-    --primary-color-rgb: 181, 163, 144;
+    --primary-color-rgb: 74, 158, 255;
     --secondary-color: var(--dark-surface);
     --card-bg: var(--dark-bg-secondary);
     --input-bg: var(--dark-bg-tertiary);
@@ -123,7 +123,7 @@
 .dark-theme {
     --primary-color: var(--dark-accent);
     --primary-hover: var(--dark-surface);
-    --primary-color-rgb: 181, 163, 144;
+    --primary-color-rgb: 74, 158, 255;
     --secondary-color: var(--dark-surface);
     --card-bg: var(--dark-bg-secondary);
     --input-bg: var(--dark-bg-tertiary);
@@ -1431,20 +1431,20 @@ body {
     border-left-color: #c0392b;
 }
 .dark-theme {
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #2d2d2d;
-    --bg-tertiary: #3a3a3a;
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #2a2a2a;
     --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
-    --text-secondary-rgb: 176, 176, 176;
-    --shadow-primary: rgba(0, 0, 0, 0.3);
-    --shadow-secondary: rgba(0, 0, 0, 0.5);
+    --text-secondary: #cccccc;
+    --text-secondary-rgb: 204, 204, 204;
+    --shadow-primary: rgba(0, 0, 0, 0.6);
+    --shadow-secondary: rgba(0, 0, 0, 0.7);
     --border-color: #404040;
-    --accent-color: #3498db;
+    --accent-color: #4a9eff;
 }
 
 .dark-theme .sidebar {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);
 }
 
 .dark-theme .nav-item {
