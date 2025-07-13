@@ -15,6 +15,29 @@ Modern web interface for Docker Registry management with authentication, environ
 - **📈 Export Features**: Statistics and settings export capabilities
 - **🚀 Container-Ready**: Full Docker and Kubernetes support
 
+## 📁 Project Structure
+
+```
+registry_ui/
+├── server.js              # Main Express server
+├── package.json           # Dependencies and scripts
+├── Dockerfile             # Container configuration
+├── docker-compose.yml     # Multi-container setup
+├── .env.example           # Environment variables template
+├── middleware/
+│   └── auth.js            # Authentication middleware
+└── public/
+    ├── index.html         # Main application interface
+    ├── login.html         # Authentication page
+    ├── script.js          # Frontend JavaScript
+    ├── styles.css         # Application styles
+    └── logo.svg           # Application logo
+```
+
+## 🎨 Theme & Design
+
+### Dark Mode
+- **True Dark**: Deep black background (#0f0f0f) for reduced eye strain
 ## 🎨 Theme & Design
 
 ### Dark Mode
@@ -56,88 +79,15 @@ AUTH_USERNAME=admin
 AUTH_PASSWORD=$2b$10$TYPp33iP8dHvzB8cwW.Mr.L4b6YbQ5ZcjFbDngCHz4dOnjAui3v8O
 SESSION_SECRET=your-secret-key-change-in-production
 
-# Application Settings
-DEFAULT_THEME=light
-AUTO_REFRESH_INTERVAL=300000
-AUTO_REFRESH_ENABLED=true
-NOTIFICATIONS_ENABLED=true
-CACHE_ENABLED=true
-CACHE_TTL=300000
-STATISTICS_EXPORT_ENABLED=true
-SETTINGS_EXPORT_ENABLED=true
-```
-
-### 2. Local Development
-
-```bash
-# Install dependencies
-npm install
-
-# Run in development mode
-npm run dev
-
-# Or run in production
-npm start
-```
-
 ### 3. Docker Deployment
 
 ```bash
-# Basic deployment
+# Using Docker Compose
 docker-compose up -d
 
-# Production deployment
-docker-compose --profile production up -d
-
-# Development mode
-docker-compose --profile development up -d
-```
-
-### 4. Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `AUTH_ENABLED` | `false` | Enable/disable authentication |
-| `AUTH_USERNAME` | - | Username for authentication |
-| `AUTH_PASSWORD` | - | Bcrypt hashed password for authentication |
-| `SESSION_SECRET` | - | Secret key for session management |
-| `DEFAULT_THEME` | `light` | UI theme: `light`, `dark`, or `auto` |
-| `AUTO_REFRESH_INTERVAL` | `300000` | Auto-refresh interval in milliseconds |
-| `AUTO_REFRESH_ENABLED` | `true` | Enable/disable automatic refresh |
-| `NOTIFICATIONS_ENABLED` | `true` | Enable/disable notifications |
-| `CACHE_ENABLED` | `true` | Enable/disable caching |
-| `CACHE_TTL` | `300000` | Cache TTL in milliseconds |
-| `STATISTICS_EXPORT_ENABLED` | `true` | Enable/disable statistics export |
-| `SETTINGS_EXPORT_ENABLED` | `true` | Enable/disable settings export |
-
-```bash
-# Build image
+# Build and run manually
 docker build -t registry-ui .
-
-# Run with Docker Compose
-docker-compose up -d
-```
-
-## 📋 Requirements
-
-- **Node.js** 18+ 
-- **Docker** (optional, for containerization)
-- **Docker Registry** v2 API compatible
-
-## 🛠️ Project Structure
-
-```
-registry_ui/
-├── public/                 # Frontend assets
-│   ├── index.html         # Main interface
-│   ├── styles.css         # Modern responsive styles
-│   └── script.js          # Frontend logic with settings API
-├── server.js              # Express.js server with REST API
-├── package.json           # Node.js dependencies
-├── Dockerfile             # Production Docker configuration
-├── docker-compose.yml     # Multi-environment orchestration
-├── .env.example          # Environment configuration template
-└── CONFIG.md             # Detailed configuration guide
+docker run -p 3000:3000 --env-file .env registry-ui
 ```
 
 ## 🔧 API Endpoints
@@ -148,91 +98,16 @@ registry_ui/
 - `GET /api/repositories/:name/manifests/:tag` - Get image manifest
 - `DELETE /api/repositories/:name/manifests/:digest` - Delete an image
 
-### Statistics & Analytics
-- `GET /api/stats` - Comprehensive registry statistics
-- `POST /api/stats/refresh` - Force statistics cache refresh
-
-### Settings Management
-- `GET /api/settings` - Get current application settings
-- `POST /api/settings` - Update settings in real-time
-- `POST /api/settings/reset` - Reset settings to environment defaults
-
-### System
-- `GET /api/config` - Get registry configuration info
-
-## 🎯 Usage
-
-1. **Access Interface**: Navigate to `http://localhost:3000`
-2. **Repository Management**: Browse repositories and tags
-3. **Statistics Dashboard**: Monitor usage and storage metrics
-4. **Settings Configuration**: Customize interface and behavior
-5. **Real-time Updates**: Auto-refresh keeps data current
-
-## 🐳 Production Deployment
-
-### Docker Compose (Recommended)
-
-```yaml
-version: '3.8'
-services:
-  registry-ui:
-    build: .
-    ports:
-      - "3000:3000"
-    environment:
-      REGISTRY_URL: ${REGISTRY_URL}
-      REGISTRY_USERNAME: ${REGISTRY_USERNAME}
-      REGISTRY_PASSWORD: ${REGISTRY_PASSWORD}
-      DEFAULT_THEME: dark
-      CACHE_ENABLED: true
-      AUTO_REFRESH_INTERVAL: 600000
-    restart: unless-stopped
-```
-
-### Kubernetes
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: registry-console
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: registry-console
-  template:
-    metadata:
-      labels:
-        app: registry-console
-    spec:
-      containers:
-      - name: registry-console
-        image: registry-console:latest
-        ports:
-        - containerPort: 3000
-        env:
-        - name: REGISTRY_URL
-          value: "registry.example.com"
-        - name: DEFAULT_THEME
-          value: "dark"
-        - name: CACHE_ENABLED
-          value: "true"
-```
+### Statistics & Settings
+- `GET /api/stats` - Registry statistics
+- `GET /api/settings` - Application settings
+- `POST /api/settings` - Update settings
 
 ## 🔐 Security
 
-- **Session-based Authentication**: Secure login system with configurable credentials
-- **Password Protection**: Bcrypt-hashed passwords with salt for enhanced security
+- **Authentication**: Configurable login system with session management
 - **Route Protection**: All endpoints protected with authentication middleware
-- **Session Management**: Secure sessions with configurable expiration and HttpOnly cookies
-- **CSRF Protection**: Built-in protection against cross-site request forgery
 - **Environment Variables**: Secure credential management via `.env`
-- **HTTP Basic Authentication**: Direct integration with Docker Registry auth
-- **Input Validation**: Comprehensive request validation and sanitization
-- **Confirmation Dialogs**: Mandatory confirmation for destructive operations
-- **Audit Logging**: Server-side logging of all operations
-- **Container Security**: Non-root user execution in Docker containers
 
 ### Authentication Setup
 
@@ -247,99 +122,28 @@ AUTH_USERNAME=admin
 node -e "const bcrypt = require('bcrypt'); console.log(bcrypt.hashSync('your-password', 10));"
 ```
 
-3. **Configure Environment**:
-```env
-AUTH_PASSWORD=$2b$10$TYPp33iP8dHvzB8cwW.Mr.L4b6YbQ5ZcjFbDngCHz4dOnjAui3v8O
-SESSION_SECRET=your-secret-key-change-in-production
-```
-
-4. **Default Credentials**: 
+3. **Default Credentials**: 
    - Username: `admin`
    - Password: `admin` (change in production!)
-
-## 🚀 Performance
-
-- **Intelligent Caching**: Configurable cache with TTL for statistics
-- **Auto-refresh**: Smart polling system with configurable intervals
-- **Responsive Design**: Optimized for all screen sizes
-- **Efficient API**: Minimal data transfer with selective loading
-- **Background Processing**: Non-blocking statistics calculations
 
 ## 📱 Browser Compatibility
 
 - **Modern Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
-- **Mobile Support**: Full responsive design for tablets and phones
+- **Mobile Support**: Full responsive design
 - **Theme Support**: Automatic dark/light mode detection
-- **Accessibility**: WCAG 2.1 compliant interface
-
-## 🐛 Troubleshooting
-
-### Connection Issues
-```bash
-# Check registry connectivity
-curl -u username:password https://registry.example.com/v2/
-
-# Verify environment variables
-cat .env | grep REGISTRY
-```
-
-### Configuration Issues
-```bash
-# Check application settings
-curl http://localhost:3000/api/settings
-
-# Reset to defaults
-curl -X POST http://localhost:3000/api/settings/reset
-```
-
-### Performance Issues
-- Enable caching in settings (`CACHE_ENABLED=true`)
-- Increase cache TTL (`CACHE_TTL=900000`)
-- Adjust auto-refresh interval (`AUTO_REFRESH_INTERVAL=600000`)
-
-## 📊 Monitoring
-
-The application provides built-in health checks:
-- Health endpoint: `GET /api/settings` (returns 200 if healthy)
-- Statistics endpoint: `GET /api/stats` (returns registry metrics)
-- Docker health check: Built into container configuration
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Development Setup
-
-```bash
-# Clone repository
-git clone <repository-url>
-cd registry_ui
-
-# Install dependencies
-npm install
-
-# Copy environment template
-cp .env.example .env
-
-# Start development server
-npm run dev
-```
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
 ## 📄 License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-**Rúben Barbosa**  
-Developed with ❤️ for efficient Docker Registry management
+This project is licensed under the MIT License.
 
 ---
 
-*Production-ready interface for comprehensive Docker Registry administration with modern UI and flexible configuration.*
+*Modern interface for comprehensive Docker Registry management.*
