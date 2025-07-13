@@ -15,7 +15,7 @@
     --light-text-secondary: #5d4e37;
     --light-text-secondary-rgb: 93, 78, 55;
     
-    /* Dark Mode Colors - Dark Neutral Palette */
+    /* Dark Mode Colors - Dark Brown Palette */
     --dark-bg-primary: #0f0f0f;      /* True dark base */
     --dark-bg-secondary: #1a1a1a;    /* Dark secondary */
     --dark-bg-tertiary: #2a2a2a;     /* Dark tertiary */
@@ -23,7 +23,7 @@
     --dark-text-primary: #ffffff;    /* Pure white */
     --dark-text-secondary: #cccccc;  /* Light gray text */
     --dark-text-secondary-rgb: 204, 204, 204;
-    --dark-accent: #4a9eff;          /* Blue accent */
+    --dark-accent: #b8956f;          /* Dark brown accent (based on pale-dogwood) */
     --dark-border: #404040;          /* Dark border */
     
     /* Status Colors */
@@ -32,9 +32,9 @@
     --warning: #f0d8a8;
     
     /* Dark Mode Status Colors */
-    --dark-danger: #d4a5a5;
-    --dark-success: #b8d4a5;
-    --dark-warning: #f0d8a8;
+    --dark-danger: #c07c7c;
+    --dark-success: #9bc07c;
+    --dark-warning: #d4b882;
     
     /* Shadow Colors */
     --shadow-light: rgba(0, 0, 0, 0.1);
@@ -90,7 +90,7 @@
     /* Login-specific variables for dark theme */
     --primary-color: var(--dark-accent);
     --primary-hover: var(--dark-surface);
-    --primary-color-rgb: 74, 158, 255;
+    --primary-color-rgb: 184, 149, 111;
     --secondary-color: var(--dark-surface);
     --card-bg: var(--dark-bg-secondary);
     --input-bg: var(--dark-bg-tertiary);
@@ -131,7 +131,7 @@
     /* Login-specific variables */
     --primary-color: var(--dark-accent);
     --primary-hover: var(--dark-surface);
-    --primary-color-rgb: 74, 158, 255;
+    --primary-color-rgb: 184, 149, 111;
     --secondary-color: var(--dark-surface);
     --card-bg: var(--dark-bg-secondary);
     --input-bg: var(--dark-bg-tertiary);
@@ -143,7 +143,7 @@
     
     /* Accent and other colors */
     --accent: var(--dark-accent);
-    --accent-color: #4a9eff;
+    --accent-color: #b8956f;
 }
 
 body {
@@ -1451,7 +1451,7 @@ body {
     --shadow-primary: rgba(0, 0, 0, 0.6);
     --shadow-secondary: rgba(0, 0, 0, 0.7);
     --border-color: #404040;
-    --accent-color: #4a9eff;
+    --accent-color: #b8956f;
 }
 
 .dark-theme .sidebar {
