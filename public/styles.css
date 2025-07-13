@@ -32,9 +32,9 @@
     --warning: #f0d8a8;
     
     /* Dark Mode Status Colors */
-    --dark-danger: #ef4444;
-    --dark-success: #22c55e;
-    --dark-warning: #f59e0b;
+    --dark-danger: #d4a5a5;
+    --dark-success: #b8d4a5;
+    --dark-warning: #f0d8a8;
     
     /* Shadow Colors */
     --shadow-light: rgba(0, 0, 0, 0.1);

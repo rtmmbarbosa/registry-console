@@ -10,10 +10,23 @@ Modern web interface for Docker Registry management with authentication, environ
 - **🗑️ Safe Cleanup**: Image deletion with confirmation dialogs
 - **📊 Advanced Analytics**: Real-time usage and storage metrics with caching
 - **⚙️ Modern Settings**: Environment-based configuration with live updates
-- **🎨 Responsive UI**: Dark/Light theme with smooth animations
+- **🎨 Clean Dark Theme**: Modern UI with solid colors and true dark mode
 - **🔧 Auto-refresh**: Configurable automatic data refresh
 - **📈 Export Features**: Statistics and settings export capabilities
 - **🚀 Container-Ready**: Full Docker and Kubernetes support
+
+## 🎨 Theme & Design
+
+### Dark Mode
+- **True Dark**: Deep black background (#0f0f0f) for reduced eye strain
+- **Solid Colors**: Clean interface without gradients for better readability
+- **Consistent Icons**: SVG outline icons throughout the interface
+- **Accessible**: High contrast ratios and proper color coordination
+
+### Light Mode
+- **Warm Colors**: Soft, professional color palette
+- **Clean Typography**: Easy-to-read fonts with proper spacing
+- **Intuitive Layout**: Logical organization of interface elements
 
 ## 🚀 Quick Start
 
