@@ -386,8 +386,8 @@ body {
 }
 
 /* Home page specific styling for consistent spacing */
-.page[data-page="home"] {
-    padding-top: 40px;
+.page[data-page="home"] .content-layout {
+    padding: 40px 20px 20px 20px;
 }
 
 .main-content {
@@ -466,7 +466,7 @@ body {
     flex: 1;
     overflow: hidden;
     gap: 20px;
-    padding: 0 20px 20px 20px;
+    padding: 20px;
 }
 
 .left-panel {
@@ -1788,7 +1788,11 @@ body {
     .content-layout {
         flex-direction: column;
         gap: 15px;
-        padding: 0 15px 15px 15px;
+        padding: 15px;
+    }
+    
+    .page[data-page="home"] .content-layout {
+        padding: 25px 15px 15px 15px;
     }
     
     .left-panel,
