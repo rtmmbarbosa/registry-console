@@ -460,48 +460,74 @@ body {
     display: flex;
     flex: 1;
     overflow: hidden;
+    gap: 20px;
+    padding: 0 20px 20px 20px;
 }
 
 .left-panel {
-    width: 60%;
+    width: 58%;
     background: var(--bg-secondary);
-    padding: 30px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
     overflow-y: auto;
-    border-right: 1px solid var(--bg-tertiary);
+    box-shadow: 0 2px 8px var(--shadow-primary);
 }
 
 .right-panel {
-    width: 40%;
-    background: var(--bg-primary);
-    padding: 30px;
+    width: 42%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
+    box-shadow: 0 2px 8px var(--shadow-primary);
+}
+
+.panel-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.panel-header h3 {
+    color: var(--text-primary);
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 .repositories-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .repository-item {
-    background: var(--bg-secondary);
-    border: 1px solid var(--bg-tertiary);
-    border-radius: 8px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     overflow: hidden;
+    margin-bottom: 8px;
 }
 
 .repository-item:hover {
-    border-color: var(--surface);
-    box-shadow: 0 2px 8px var(--shadow-primary);
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px var(--shadow-primary);
+    transform: translateY(-1px);
 }
 
 .repository-item.selected {
     border-color: var(--accent);
-    background: var(--bg-primary);
+    background: var(--bg-tertiary);
+    box-shadow: 0 4px 12px var(--shadow-primary);
 }
 .repository-item.highlighted {
     animation: highlightRepository 3s ease-out;
@@ -540,12 +566,14 @@ body {
 }
 
 .repository-count {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 0.85em;
-    font-weight: 500;
+    background: var(--accent);
+    color: var(--bg-primary);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
 }
 
 .repository-tags {
@@ -559,23 +587,28 @@ body {
 }
 
 .tag-item {
-    padding: 8px 15px;
-    margin: 2px 0;
-    border-radius: 4px;
+    padding: 10px 15px;
+    margin: 3px 0;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border: 1px solid transparent;
 }
 
 .tag-item:hover {
     background: var(--bg-tertiary);
+    border-color: var(--border-color);
+    transform: translateX(2px);
 }
 
 .tag-item.selected {
     background: var(--bg-tertiary);
-    border-left: 3px solid var(--text-primary);
+    border-color: var(--accent);
+    border-left: 3px solid var(--accent);
+    box-shadow: 0 2px 4px var(--shadow-primary);
 }
 
 .tag-name {
@@ -585,11 +618,11 @@ body {
     font-size: 0.9em;
 }
 .details-content {
-    background: var(--bg-secondary);
-    border-radius: 8px;
-    padding: 25px;
-    box-shadow: 0 2px 8px var(--shadow-primary);
+    background: var(--bg-primary);
     border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px var(--shadow-primary);
 }
 
 .details-placeholder {
@@ -613,11 +646,13 @@ body {
 .details-placeholder h3 {
     color: var(--text-primary);
     margin-bottom: 10px;
+    font-weight: 600;
 }
 
 .details-placeholder p {
     color: var(--text-secondary);
     font-size: 0.9em;
+    opacity: 0.8;
 }
 
 .details-header {
@@ -1742,6 +1777,19 @@ body {
     .pie-chart-container {
         min-height: 300px;
         padding: 20px;
+    }
+    
+    /* Home page responsiveness */
+    .content-layout {
+        flex-direction: column;
+        gap: 15px;
+        padding: 0 15px 15px 15px;
+    }
+    
+    .left-panel,
+    .right-panel {
+        width: 100%;
+        padding: 15px;
     }
     
     .pie-chart {
