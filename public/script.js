@@ -527,10 +527,10 @@ function updateSizeDistributionChart() {
     
     const sizeDistribution = statistics.distribution?.sizes || {};
     const data = [
-        { label: 'Small (<50MB)', value: sizeDistribution.small || 0, color: '#3498db' },
-        { label: 'Medium (50-200MB)', value: sizeDistribution.medium || 0, color: '#2ecc71' },
-        { label: 'Large (200MB-1GB)', value: sizeDistribution.large || 0, color: '#f39c12' },
-        { label: 'X-Large (>1GB)', value: sizeDistribution.xlarge || 0, color: '#e74c3c' }
+        { label: 'Small (<50MB)', value: sizeDistribution.small || 0, color: '#b8956f' },
+        { label: 'Medium (50-200MB)', value: sizeDistribution.medium || 0, color: '#9bc07c' },
+        { label: 'Large (200MB-1GB)', value: sizeDistribution.large || 0, color: '#d4b882' },
+        { label: 'X-Large (>1GB)', value: sizeDistribution.xlarge || 0, color: '#c07c7c' }
     ];
     
     const total = data.reduce((sum, item) => sum + item.value, 0);
@@ -561,10 +561,10 @@ function updateSizeDistributionChart() {
     const pieChartHTML = `
         <div class="pie-chart-wrapper">
             <div class="pie-chart" style="
-                --chart-color-1: ${chartData[0]?.color || '#3498db'};
-                --chart-color-2: ${chartData[1]?.color || '#2ecc71'};
-                --chart-color-3: ${chartData[2]?.color || '#f39c12'};
-                --chart-color-4: ${chartData[3]?.color || '#e74c3c'};
+                --chart-color-1: ${chartData[0]?.color || '#b8956f'};
+                --chart-color-2: ${chartData[1]?.color || '#9bc07c'};
+                --chart-color-3: ${chartData[2]?.color || '#d4b882'};
+                --chart-color-4: ${chartData[3]?.color || '#c07c7c'};
                 --chart-end-1: ${chartData[0]?.endAngle || 0}deg;
                 --chart-end-2: ${chartData[1]?.endAngle || 0}deg;
                 --chart-end-3: ${chartData[2]?.endAngle || 0}deg;

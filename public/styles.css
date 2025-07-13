@@ -36,6 +36,18 @@
     --dark-success: #9bc07c;
     --dark-warning: #d4b882;
     
+    /* Chart Colors - Light Mode */
+    --chart-color-1: #b8956f;        /* Brown - primary */
+    --chart-color-2: #9bc07c;        /* Green - success */
+    --chart-color-3: #d4b882;        /* Yellow - warning */
+    --chart-color-4: #c07c7c;        /* Red - danger */
+    
+    /* Chart Colors - Dark Mode */
+    --dark-chart-color-1: #b8956f;   /* Brown - primary */
+    --dark-chart-color-2: #9bc07c;   /* Green - success */
+    --dark-chart-color-3: #d4b882;   /* Yellow - warning */
+    --dark-chart-color-4: #c07c7c;   /* Red - danger */
+    
     /* Shadow Colors */
     --shadow-light: rgba(0, 0, 0, 0.1);
     --shadow-medium: rgba(0, 0, 0, 0.15);
@@ -57,6 +69,12 @@
     --shadow-secondary: var(--shadow-medium);
     --shadow-tertiary: var(--shadow-dark);
     --border-color: var(--linen);
+    
+    /* Chart colors for light theme */
+    --chart-color-1: var(--chart-color-1);
+    --chart-color-2: var(--chart-color-2);
+    --chart-color-3: var(--chart-color-3);
+    --chart-color-4: var(--chart-color-4);
     
     /* Login-specific variables */
     --primary-color: var(--pale-dogwood);
@@ -86,6 +104,12 @@
     --danger: var(--dark-danger);
     --success: var(--dark-success);
     --warning: var(--dark-warning);
+    
+    /* Chart colors for dark theme */
+    --chart-color-1: var(--dark-chart-color-1);
+    --chart-color-2: var(--dark-chart-color-2);
+    --chart-color-3: var(--dark-chart-color-3);
+    --chart-color-4: var(--dark-chart-color-4);
     
     /* Login-specific variables for dark theme */
     --primary-color: var(--dark-accent);
@@ -1844,14 +1868,14 @@ body {
     position: relative;
     background: conic-gradient(
         from 0deg,
-        var(--chart-color-1, #3498db) 0deg,
-        var(--chart-color-1, #3498db) var(--chart-end-1, 90deg),
-        var(--chart-color-2, #2ecc71) var(--chart-end-1, 90deg),
-        var(--chart-color-2, #2ecc71) var(--chart-end-2, 180deg),
-        var(--chart-color-3, #f39c12) var(--chart-end-2, 180deg),
-        var(--chart-color-3, #f39c12) var(--chart-end-3, 270deg),
-        var(--chart-color-4, #e74c3c) var(--chart-end-3, 270deg),
-        var(--chart-color-4, #e74c3c) 360deg
+        var(--chart-color-1, #b8956f) 0deg,
+        var(--chart-color-1, #b8956f) var(--chart-end-1, 90deg),
+        var(--chart-color-2, #9bc07c) var(--chart-end-1, 90deg),
+        var(--chart-color-2, #9bc07c) var(--chart-end-2, 180deg),
+        var(--chart-color-3, #d4b882) var(--chart-end-2, 180deg),
+        var(--chart-color-3, #d4b882) var(--chart-end-3, 270deg),
+        var(--chart-color-4, #c07c7c) var(--chart-end-3, 270deg),
+        var(--chart-color-4, #c07c7c) 360deg
     );
     box-shadow: 0 4px 12px var(--shadow-primary);
     transition: transform 0.3s ease;
@@ -2457,19 +2481,19 @@ body {
     background-size: 16px !important;
 }
 .settings-section.registry-config h3::before {
-    background: #3498db;
+    background: #b8956f;
 }
 
 .settings-section.appearance h3::before {
-    background: #9b59b6;
+    background: #9bc07c;
 }
 
 .settings-section.cache-management h3::before {
-    background: #e74c3c;
+    background: #c07c7c;
 }
 
 .settings-section.settings-management h3::before {
-    background: #f39c12;
+    background: #d4b882;
 }
 .settings-content::before {
     content: '';
