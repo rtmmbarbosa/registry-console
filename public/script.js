@@ -881,6 +881,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         return;
     }
     
+    // Apply saved theme immediately for consistency with login page
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    }
+    
     // Initialize settings system
     initializeSettings();
     
@@ -1099,8 +1105,12 @@ async function handleThemeChange(event) {
 }
 
 function applySettings(settings) {
+    // Check localStorage first for theme consistency across login/main app
+    const savedTheme = localStorage.getItem('theme');
+    const themeToApply = savedTheme || settings.defaultTheme;
+    
     // Apply theme
-    applyTheme(settings.defaultTheme);
+    applyTheme(themeToApply);
     
     // Setup auto-refresh
     if (settings.autoRefreshEnabled) {
@@ -1212,16 +1222,19 @@ async function exportStatistics() {
 
 // Enhanced theme functions
 async function toggleTheme() {
-    const currentTheme = serverSettings?.defaultTheme || 'light';
+    // Check localStorage first for current theme state
+    const currentTheme = localStorage.getItem('theme') || serverSettings?.defaultTheme || 'light';
     const newTheme = currentTheme === 'light' ? 'dark' : 'light';
     
+    // Apply theme immediately for responsive UI
+    applyTheme(newTheme);
+    
+    // Update server settings in background
     const updateResult = await updateServerSettings({
         defaultTheme: newTheme
     });
     
     if (updateResult) {
-        applyTheme(newTheme);
-        
         // Update theme select if on settings page
         const themeSelect = document.getElementById('themeSelect');
         if (themeSelect) {
@@ -1229,27 +1242,45 @@ async function toggleTheme() {
         }
         
         showToast(`Theme changed to ${newTheme}`, 'success');
+    } else {
+        // If server update fails, revert theme
+        applyTheme(currentTheme);
+        showToast('Failed to save theme preference', 'error');
     }
 }
 
 function applyTheme(theme) {
     const root = document.documentElement;
     
+    // Save theme to localStorage for consistency across pages
+    localStorage.setItem('theme', theme);
+    
     if (theme === 'dark') {
         root.setAttribute('data-theme', 'dark');
         root.classList.add('dark-theme');
+        document.body.classList.remove('light-theme');
+        document.body.classList.add('dark-theme');
     } else if (theme === 'light') {
         root.setAttribute('data-theme', 'light');
         root.classList.remove('dark-theme');
+        document.body.classList.remove('dark-theme');
+        document.body.classList.add('light-theme');
     } else if (theme === 'auto') {
         // Auto theme based on system preference
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const effectiveTheme = systemPrefersDark ? 'dark' : 'light';
+        localStorage.setItem('theme', effectiveTheme);
+        
         if (systemPrefersDark) {
             root.setAttribute('data-theme', 'dark');
             root.classList.add('dark-theme');
+            document.body.classList.remove('light-theme');
+            document.body.classList.add('dark-theme');
         } else {
             root.setAttribute('data-theme', 'light');
             root.classList.remove('dark-theme');
+            document.body.classList.remove('dark-theme');
+            document.body.classList.add('light-theme');
         }
     }
 }

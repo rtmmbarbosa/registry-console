@@ -269,6 +269,7 @@
 
         // Initialize theme
         document.addEventListener('DOMContentLoaded', function() {
+            // Check localStorage first, fallback to light theme
             const savedTheme = localStorage.getItem('theme') || 'light';
             setTheme(savedTheme);
         });
