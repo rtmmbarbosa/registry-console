@@ -1,31 +1,41 @@
-version: '3.8'
-
 services:
   registry-console:
-    build: .
+    image: registry.ovh-1.moviik.com/registry-console:v2-multiarch-fixed-final
     container_name: registry-console
-    ports:
-      - "3000:3000"
+    # Remove ports mapping - Traefik will handle routing
+    # ports:
+    #   - "3000:3000"
     env_file:
       - .env
     environment:
       NODE_ENV: production
     restart: unless-stopped
+    ports:
+      - "3000:3000"
     networks:
       - registry-net
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/settings"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => { process.exit(1) })"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+    labels:
+      # Traefik configuration
+      - "traefik.enable=true"
+      - "traefik.http.routers.registry-console.rule=Host(`seu-dominio.com`)"  # Substitua pelo seu domínio real
+      - "traefik.http.routers.registry-console.entrypoints=websecure"
+      - "traefik.http.routers.registry-console.tls.certresolver=letsencrypt"
+      - "traefik.http.services.registry-console.loadbalancer.server.port=3000"
+      - "traefik.docker.network=traefik"
 
-  # Production profile with optimized settings
+  # Production profile with optimized settings for Traefik
   registry-console-prod:
-    build: .
+    image: registry.ovh-1.moviik.com/registry-console:v2-multiarch-fixed-final
     container_name: registry-console-prod
-    ports:
-      - "3001:3000"
+    # Remove ports mapping - Traefik will handle routing
+    # ports:
+    #   - "3001:3000"
     environment:
       REGISTRY_URL: ${REGISTRY_URL}
       REGISTRY_USERNAME: ${REGISTRY_USERNAME}
@@ -40,8 +50,23 @@ services:
     restart: unless-stopped
     networks:
       - registry-net
+      - traefik
     profiles:
       - production
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => { process.exit(1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      # Traefik configuration for production
+      - "traefik.enable=true"
+      - "traefik.http.routers.registry-console-prod.rule=Host(`registry-prod.yourdomain.com`)"  # Altere para seu domínio
+      - "traefik.http.routers.registry-console-prod.entrypoints=websecure"
+      - "traefik.http.routers.registry-console-prod.tls.certresolver=letsencrypt"
+      - "traefik.http.services.registry-console-prod.loadbalancer.server.port=3000"
+      - "traefik.docker.network=traefik"
 
   # Development profile with debug settings  
   registry-console-dev:
@@ -70,3 +95,5 @@ services:
 networks:
   registry-net:
     driver: bridge
+  traefik:
+    external: true

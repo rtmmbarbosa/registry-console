@@ -16,9 +16,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        secure: process.env.COOKIE_SECURE === 'true' || (process.env.NODE_ENV === 'production' && process.env.COOKIE_SECURE !== 'false'),
         httpOnly: true, // Prevent XSS attacks
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        sameSite: 'lax' // CSRF protection
     }
 }));
 
@@ -133,14 +134,15 @@ async function getAuthToken() {
 
 // Make requests to registry
 async function registryRequest(endpoint, options = {}) {
-    const { default: fetch } = await import('node-fetch');
-    
     const url = `https://${REGISTRY_CONFIG.url}/v2${endpoint}`;
+    
+    // Default Accept header, but allow override
+    const defaultAccept = 'application/json';
     
     // Try first with Basic Auth
     let headers = {
         'Authorization': getAuthHeader(),
-        'Accept': 'application/json',
+        'Accept': defaultAccept,
         ...options.headers
     };
 
@@ -156,7 +158,7 @@ async function registryRequest(endpoint, options = {}) {
             if (token) {
                 headers = {
                     'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
+                    'Accept': defaultAccept,
                     ...options.headers
                 };
                 
@@ -169,6 +171,11 @@ async function registryRequest(endpoint, options = {}) {
 
         if (!response.ok) {
             throw new Error(`Registry API error: ${response.status} ${response.statusText}`);
+        }
+
+        // For manifest requests, return the response object to access headers
+        if (endpoint.includes('/manifests/') && options.returnResponse) {
+            return response;
         }
 
         return await response.json();
@@ -189,6 +196,26 @@ app.get('/login', redirectIfAuthenticated, (req, res) => {
 app.post('/api/auth/login', handleLogin);
 app.post('/api/auth/logout', handleLogout);
 app.get('/api/auth/user', getCurrentUser);
+
+// Health check endpoint (public - no authentication required)
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'healthy', 
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        version: require('./package.json').version || '1.0.0'
+    });
+});
+
+// Alternative health check endpoint
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'healthy', 
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        service: 'registry-console'
+    });
+});
 
 // Static files (excluding index.html which needs authentication)
 app.use(express.static('public', { index: false }));
@@ -221,12 +248,21 @@ app.get('/api/repositories/:name(*)/manifests/:tag', requireAuth, async (req, re
     try {
         const { name, tag } = req.params;
         
-        // Get the manifest first
-        const manifest = await registryRequest(`/${name}/manifests/${tag}`, {
+        // Get the manifest first - need response object for headers
+        const response = await registryRequest(`/${name}/manifests/${tag}`, {
             headers: {
-                'Accept': 'application/vnd.docker.distribution.manifest.v2+json'
-            }
+                'Accept': 'application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
+            },
+            returnResponse: true
         });
+        
+        const manifest = await response.json();
+        
+        // Add digest from headers for deletion purposes
+        const digest = response.headers.get('docker-content-digest');
+        if (digest) {
+            manifest.digest = digest;
+        }
         
         // If manifest has config, get the config blob for additional info
         if (manifest.config && manifest.config.digest) {
@@ -261,7 +297,6 @@ app.get('/api/repositories/:name(*)/manifests/:tag', requireAuth, async (req, re
 app.delete('/api/repositories/:name(*)/manifests/:digest', requireAuth, async (req, res) => {
     try {
         const { name, digest } = req.params;
-        const { default: fetch } = await import('node-fetch');
         
         const url = `https://${REGISTRY_CONFIG.url}/v2/${name}/manifests/${digest}`;
         const response = await fetch(url, {
@@ -341,7 +376,7 @@ app.get('/api/stats', requireAuth, async (req, res) => {
                     try {
                         const manifest = await registryRequest(`/${repo}/manifests/${tag}`, {
                             headers: {
-                                'Accept': 'application/vnd.docker.distribution.manifest.v2+json'
+                                'Accept': 'application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
                             }
                         });
                         

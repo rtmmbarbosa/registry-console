@@ -619,17 +619,15 @@ async function confirmDeleteImage() {
     if (!deleteImageData) return;
     
     try {
-        const manifestResponse = await fetch(`/api/repositories/${encodeURIComponent(deleteImageData.repo)}/manifests/${encodeURIComponent(deleteImageData.tag)}`, {
-            headers: {
-                'Accept': 'application/vnd.docker.distribution.manifest.v2+json'
-            }
-        });
+        const manifestResponse = await fetch(`/api/repositories/${encodeURIComponent(deleteImageData.repo)}/manifests/${encodeURIComponent(deleteImageData.tag)}`);
         
         if (!manifestResponse.ok) {
             throw new Error('Error getting image manifest');
         }
         
-        const digest = manifestResponse.headers.get('Docker-Content-Digest');
+        const manifestData = await manifestResponse.json();
+        const digest = manifestData.digest;
+        
         if (!digest) {
             throw new Error('Digest not found in manifest');
         }

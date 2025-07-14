@@ -39,3 +39,7 @@ temp/
 
 # Test files
 public/test-*
+cookies.txt
+test_api.sh
+*_TEST_GUIDE.md
+*_SUMMARY.md
