@@ -5,18 +5,14 @@
 
 Modern web interface for Docker Registry management with authentication, environment-based configuration, and comprehensive security features - perfect for production deployments and containerized environments.
 
-## ✨ Features
+## ▸ Features
 
-- **▸ Authentication System**: Secure login with session management and route protection
-- **▸ Repository Management**: View and manage all repositories in the registry
-- **▸ Tag Management**: Complete listing and management of tags per repository
-- **▸ Safe Cleanup**: Image deletion with confirmation dialogs
-- **▸ Advanced Analytics**: Real-time usage and storage metrics with caching
-- **▸ Modern Settings**: Environment-based configuration with live updates
-- **▸ Clean Dark Theme**: Modern UI with solid colors and true dark mode
-- **▸ Auto-refresh**: Configurable automatic data refresh
-- **▸ Export Features**: Statistics and settings export capabilities
-- **▸ Container-Ready**: Full Docker and Kubernetes support
+- **Authentication**: Login system with session management
+- **Repository Management**: View and manage Docker repositories
+- **Tag Management**: List and manage image tags
+- **Image Deletion**: Remove images with confirmation dialogs
+- **Auto-refresh**: Configurable data refresh intervals
+- **Simple Statistics**: View basic usage metrics
 
 ## ◦ Project Structure
 
@@ -36,20 +32,6 @@ registry_ui/
     ├── styles.css         # Application styles
     └── logo.svg           # Application logo
 ```
-
-## ◦ Theme & Design
-
-### Dark Mode
-- **True Dark**: Deep black background (#0f0f0f) for reduced eye strain
-- **True Dark**: Deep black background (#0f0f0f) for reduced eye strain
-- **Solid Colors**: Clean interface without gradients for better readability
-- **Consistent Icons**: SVG outline icons throughout the interface
-- **Accessible**: High contrast ratios and proper color coordination
-
-### Light Mode
-- **Warm Colors**: Soft, professional color palette
-- **Clean Typography**: Easy-to-read fonts with proper spacing
-- **Intuitive Layout**: Logical organization of interface elements
 
 ## ▸ Quick Start
 
@@ -90,19 +72,6 @@ docker build -t registry-ui .
 docker run -p 3000:3000 --env-file .env registry-ui
 ```
 
-## ◦ API Endpoints
-
-### Registry Management
-- `GET /api/repositories` - List all repositories
-- `GET /api/repositories/:name/tags` - List repository tags
-- `GET /api/repositories/:name/manifests/:tag` - Get image manifest
-- `DELETE /api/repositories/:name/manifests/:digest` - Delete an image
-
-### Statistics & Settings
-- `GET /api/stats` - Registry statistics
-- `GET /api/settings` - Application settings
-- `POST /api/settings` - Update settings
-
 ## ▸ Security
 
 - **Authentication**: Configurable login system with session management
@@ -125,20 +94,6 @@ node -e "const bcrypt = require('bcrypt'); console.log(bcrypt.hashSync('your-pas
 3. **Default Credentials**: 
    - Username: `admin`
    - Password: `admin` (change in production!)
-
-## ▸ Browser Compatibility
-
-- **Modern Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
-- **Mobile Support**: Full responsive design
-- **Theme Support**: Automatic dark/light mode detection
-
-## ▸ Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
 
 ## ▸ License
 
