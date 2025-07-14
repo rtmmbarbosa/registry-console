@@ -14,6 +14,24 @@ Modern web interface for Docker Registry management with authentication, environ
 - **Auto-refresh**: Configurable data refresh intervals
 - **Simple Statistics**: View basic usage metrics
 
+## ▸ Screenshots
+
+<div align="center">
+
+### Login Interface
+<img src="screenshots/screenshot1.png" alt="Login Interface" width="600">
+
+### Repository Management
+<img src="screenshots/screenshot2.png" alt="Repository Management" width="600">
+
+### Image Details & Actions
+<img src="screenshots/screenshot3.png" alt="Image Details & Actions" width="600">
+
+### Analytics Dashboard
+<img src="screenshots/screenshot4.png" alt="Analytics Dashboard" width="600">
+
+</div>
+
 ## ◦ Project Structure
 
 ```
