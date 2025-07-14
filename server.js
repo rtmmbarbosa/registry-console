@@ -134,6 +134,7 @@ async function getAuthToken() {
 
 // Make requests to registry
 async function registryRequest(endpoint, options = {}) {
+    const { default: fetch } = await import('node-fetch');
     const url = `https://${REGISTRY_CONFIG.url}/v2${endpoint}`;
     
     // Default Accept header, but allow override
@@ -251,7 +252,7 @@ app.get('/api/repositories/:name(*)/manifests/:tag', requireAuth, async (req, re
         // Get the manifest first - need response object for headers
         const response = await registryRequest(`/${name}/manifests/${tag}`, {
             headers: {
-                'Accept': 'application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
+                'Accept': 'application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json, application/vnd.docker.distribution.manifest.list.v2+json'
             },
             returnResponse: true
         });
@@ -262,6 +263,27 @@ app.get('/api/repositories/:name(*)/manifests/:tag', requireAuth, async (req, re
         const digest = response.headers.get('docker-content-digest');
         if (digest) {
             manifest.digest = digest;
+        }
+        
+        // Handle OCI index (multiarch images)
+        if (manifest.mediaType === 'application/vnd.oci.image.index.v1+json' || 
+            manifest.mediaType === 'application/vnd.docker.distribution.manifest.list.v2+json') {
+            
+            // For multiarch images, we can delete the entire index
+            // Add platform information for display
+            if (manifest.manifests && manifest.manifests.length > 0) {
+                manifest.platforms = manifest.manifests
+                    .filter(m => m.platform && m.platform.architecture !== 'unknown')
+                    .map(m => `${m.platform.os}/${m.platform.architecture}`);
+                
+                // Set size as sum of all manifests
+                manifest.totalSize = manifest.manifests.reduce((sum, m) => sum + (m.size || 0), 0);
+            }
+            
+            // Add registry URL for docker pull command
+            manifest.registryUrl = REGISTRY_CONFIG.url;
+            
+            return res.json(manifest);
         }
         
         // If manifest has config, get the config blob for additional info
@@ -296,6 +318,7 @@ app.get('/api/repositories/:name(*)/manifests/:tag', requireAuth, async (req, re
 // Route to delete an image
 app.delete('/api/repositories/:name(*)/manifests/:digest', requireAuth, async (req, res) => {
     try {
+        const { default: fetch } = await import('node-fetch');
         const { name, digest } = req.params;
         
         const url = `https://${REGISTRY_CONFIG.url}/v2/${name}/manifests/${digest}`;

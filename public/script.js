@@ -619,22 +619,35 @@ async function confirmDeleteImage() {
     if (!deleteImageData) return;
     
     try {
-        const manifestResponse = await fetch(`/api/repositories/${encodeURIComponent(deleteImageData.repo)}/manifests/${encodeURIComponent(deleteImageData.tag)}`);
+        const manifestResponse = await authenticatedFetch(`/api/repositories/${encodeURIComponent(deleteImageData.repo)}/manifests/${encodeURIComponent(deleteImageData.tag)}`);
+        
+        if (!manifestResponse) {
+            throw new Error('Authentication failed - please refresh and try again');
+        }
         
         if (!manifestResponse.ok) {
-            throw new Error('Error getting image manifest');
+            const errorText = await manifestResponse.text();
+            console.error('Manifest fetch error:', manifestResponse.status, errorText);
+            throw new Error(`Error getting image manifest: ${manifestResponse.status} ${manifestResponse.statusText}`);
         }
         
         const manifestData = await manifestResponse.json();
         const digest = manifestData.digest;
         
         if (!digest) {
-            throw new Error('Digest not found in manifest');
+            console.error('Manifest data:', manifestData);
+            throw new Error('Digest not found in manifest response');
         }
         
-        const deleteResponse = await fetch(`/api/repositories/${encodeURIComponent(deleteImageData.repo)}/manifests/${digest}`, {
+        console.log('Deleting image with digest:', digest);
+        
+        const deleteResponse = await authenticatedFetch(`/api/repositories/${encodeURIComponent(deleteImageData.repo)}/manifests/${digest}`, {
             method: 'DELETE'
         });
+        
+        if (!deleteResponse) {
+            throw new Error('Authentication failed during delete - please refresh and try again');
+        }
         
         const result = await deleteResponse.json();
         
