@@ -1,24 +1,24 @@
-# RegistryConsole 🐳
+# <img src="public/logo.svg" alt="RegistryConsole" width="32" height="32" style="vertical-align: middle;"> RegistryConsole
 
-> **🎵 Vibe Coding Project**  
+> **♪ Vibe Coding Project**  
 > This tool was developed during a collaborative vibe coding session to improve and facilitate private Docker registry management. Created by Ruben Barbosa and GitHub Copilot through experimental exploration of modern web technologies and registry APIs.
 
 Modern web interface for Docker Registry management with authentication, environment-based configuration, and comprehensive security features - perfect for production deployments and containerized environments.
 
 ## ✨ Features
 
-- **🔐 Authentication System**: Secure login with session management and route protection
-- **📦 Repository Management**: View and manage all repositories in the registry
-- **🏷️ Tag Management**: Complete listing and management of tags per repository
-- **🗑️ Safe Cleanup**: Image deletion with confirmation dialogs
-- **📊 Advanced Analytics**: Real-time usage and storage metrics with caching
-- **⚙️ Modern Settings**: Environment-based configuration with live updates
-- **🎨 Clean Dark Theme**: Modern UI with solid colors and true dark mode
-- **🔧 Auto-refresh**: Configurable automatic data refresh
-- **📈 Export Features**: Statistics and settings export capabilities
-- **🚀 Container-Ready**: Full Docker and Kubernetes support
+- **▸ Authentication System**: Secure login with session management and route protection
+- **▸ Repository Management**: View and manage all repositories in the registry
+- **▸ Tag Management**: Complete listing and management of tags per repository
+- **▸ Safe Cleanup**: Image deletion with confirmation dialogs
+- **▸ Advanced Analytics**: Real-time usage and storage metrics with caching
+- **▸ Modern Settings**: Environment-based configuration with live updates
+- **▸ Clean Dark Theme**: Modern UI with solid colors and true dark mode
+- **▸ Auto-refresh**: Configurable automatic data refresh
+- **▸ Export Features**: Statistics and settings export capabilities
+- **▸ Container-Ready**: Full Docker and Kubernetes support
 
-## 📁 Project Structure
+## ◦ Project Structure
 
 ```
 registry_ui/
@@ -37,13 +37,10 @@ registry_ui/
     └── logo.svg           # Application logo
 ```
 
-## 🎨 Theme & Design
+## ◦ Theme & Design
 
 ### Dark Mode
 - **True Dark**: Deep black background (#0f0f0f) for reduced eye strain
-## 🎨 Theme & Design
-
-### Dark Mode
 - **True Dark**: Deep black background (#0f0f0f) for reduced eye strain
 - **Solid Colors**: Clean interface without gradients for better readability
 - **Consistent Icons**: SVG outline icons throughout the interface
@@ -54,7 +51,7 @@ registry_ui/
 - **Clean Typography**: Easy-to-read fonts with proper spacing
 - **Intuitive Layout**: Logical organization of interface elements
 
-## 🚀 Quick Start
+## ▸ Quick Start
 
 ### 1. Environment Configuration
 
@@ -93,7 +90,7 @@ docker build -t registry-ui .
 docker run -p 3000:3000 --env-file .env registry-ui
 ```
 
-## 🔧 API Endpoints
+## ◦ API Endpoints
 
 ### Registry Management
 - `GET /api/repositories` - List all repositories
@@ -106,7 +103,7 @@ docker run -p 3000:3000 --env-file .env registry-ui
 - `GET /api/settings` - Application settings
 - `POST /api/settings` - Update settings
 
-## 🔐 Security
+## ▸ Security
 
 - **Authentication**: Configurable login system with session management
 - **Route Protection**: All endpoints protected with authentication middleware
@@ -129,13 +126,13 @@ node -e "const bcrypt = require('bcrypt'); console.log(bcrypt.hashSync('your-pas
    - Username: `admin`
    - Password: `admin` (change in production!)
 
-## 📱 Browser Compatibility
+## ▸ Browser Compatibility
 
 - **Modern Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
 - **Mobile Support**: Full responsive design
 - **Theme Support**: Automatic dark/light mode detection
 
-## 🤝 Contributing
+## ▸ Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -143,20 +140,20 @@ node -e "const bcrypt = require('bcrypt'); console.log(bcrypt.hashSync('your-pas
 4. Push to the branch
 5. Open a Pull Request
 
-## 📄 License
+## ▸ License
 
 This project is licensed under the MIT License.
 
-## 🎵 About This Project
+## ♪ About This Project
 
 This project was created during a **vibe coding session** - a collaborative creative exploration of modern web technologies focused on improving private Docker registry management. Developed by **Ruben Barbosa** and **GitHub Copilot** through experimental prototyping and iterative discovery.
 
 **Vibe Coding Characteristics:**
-- 🎨 Free experimentation with cutting-edge technologies
-- 🚀 Rapid prototyping and iterative development  
-- 🔍 Exploration of concepts without commercial pressure
-- 💡 Focus on learning, discovery, and practical solutions
-- 🤝 Human-AI collaborative development
+- ▸ Free experimentation with cutting-edge technologies
+- ▸ Rapid prototyping and iterative development  
+- ▸ Exploration of concepts without commercial pressure
+- ▸ Focus on learning, discovery, and practical solutions
+- ▸ Human-AI collaborative development
 
 The goal was to create a practical tool that simplifies private registry management while exploring the boundaries of modern web development and AI-assisted coding.
 
