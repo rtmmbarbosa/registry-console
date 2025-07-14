@@ -1,5 +1,8 @@
 # RegistryConsole 🐳
 
+> **🎵 Vibe Coding Project**  
+> This tool was developed during a collaborative vibe coding session to improve and facilitate private Docker registry management. Created by Ruben Barbosa and GitHub Copilot through experimental exploration of modern web technologies and registry APIs.
+
 Modern web interface for Docker Registry management with authentication, environment-based configuration, and comprehensive security features - perfect for production deployments and containerized environments.
 
 ## ✨ Features
@@ -144,6 +147,19 @@ node -e "const bcrypt = require('bcrypt'); console.log(bcrypt.hashSync('your-pas
 
 This project is licensed under the MIT License.
 
+## 🎵 About This Project
+
+This project was created during a **vibe coding session** - a collaborative creative exploration of modern web technologies focused on improving private Docker registry management. Developed by **Ruben Barbosa** and **GitHub Copilot** through experimental prototyping and iterative discovery.
+
+**Vibe Coding Characteristics:**
+- 🎨 Free experimentation with cutting-edge technologies
+- 🚀 Rapid prototyping and iterative development  
+- 🔍 Exploration of concepts without commercial pressure
+- 💡 Focus on learning, discovery, and practical solutions
+- 🤝 Human-AI collaborative development
+
+The goal was to create a practical tool that simplifies private registry management while exploring the boundaries of modern web development and AI-assisted coding.
+
 ---
 
-*Modern interface for comprehensive Docker Registry management.*
+*Modern interface for comprehensive Docker Registry management - A collaborative vibe coding exploration.*
