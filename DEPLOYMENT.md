@@ -92,3 +92,4 @@ npm run test:docker
 **Email:** rubenmacedobarbosa@gmail.com  
 **GitHub:** rtmmbarbosa  
 **Docker Hub:** rubenmacedobarbosa/registry-console
+# Test Docker Hub deployment
