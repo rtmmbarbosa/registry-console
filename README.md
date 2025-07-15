@@ -1,9 +1,29 @@
 # <img src="public/logo.svg" alt="RegistryConsole" width="32" height="32" style="vertical-align: middle;"> RegistryConsole
 
+[![Docker Hub](https://img.shields.io/docker/v/rubenmacedobarbosa/registry-console?label=Docker%20Hub&logo=docker)](https://hub.docker.com/r/rubenmacedobarbosa/registry-console)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/rtmmbarbosa/registry-console/build-package.yml)](https://github.com/rtmmbarbosa/registry-console/actions)
+[![License](https://img.shields.io/github/license/rtmmbarbosa/registry-console)](https://github.com/rtmmbarbosa/registry-console/blob/main/LICENSE)
+[![Docker Pulls](https://img.shields.io/docker/pulls/rubenmacedobarbosa/registry-console)](https://hub.docker.com/r/rubenmacedobarbosa/registry-console)
+
 > **♪ Vibe Coding Project**  
 > This tool was developed during a collaborative vibe coding session to improve and facilitate private Docker registry management. Created by Ruben Barbosa and GitHub Copilot through experimental exploration of modern web technologies and registry APIs.
 
 Modern web interface for Docker Registry management with authentication, environment-based configuration, and comprehensive security features - perfect for production deployments and containerized environments.
+
+## 🚀 Quick Start with Docker
+
+### Docker Hub (Recommended)
+```bash
+docker run -d \
+  --name registry-console \
+  -p 3000:3000 \
+  -e REGISTRY_URL=https://registry-1.docker.io \
+  -e REGISTRY_NAME="Docker Hub" \
+  rubenmacedobarbosa/registry-console:latest
+```
+
+### Multi-Architecture Support
+Available for `linux/amd64` and `linux/arm64` platforms.
 
 ## ▸ Features
 

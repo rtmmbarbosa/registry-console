@@ -1,8 +1,16 @@
 {
   "name": "registry-console",
-  "version": "2.0.0-beta.1",
-  "description": "Production-ready Docker Registry management interface with environment-based configuration",
+  "version": "1.0.0",
+  "description": "Modern web interface for Docker Registry management with multi-architecture support, OCI artifacts, and authentication",
   "main": "server.js",
+  "homepage": "https://github.com/rtmmbarbosa/registry-console",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rtmmbarbosa/registry-console.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rtmmbarbosa/registry-console/issues"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
@@ -17,9 +25,17 @@
     "management",
     "container",
     "production",
-    "environment-config"
+    "environment-config",
+    "multi-arch",
+    "oci",
+    "web-interface",
+    "docker-hub",
+    "image-management"
   ],
-  "author": "Rúben Barbosa",
+  "author": {
+    "name": "Ruben Macedo Barbosa",
+    "email": "rubenmacedobarbosa@gmail.com"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
