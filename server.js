@@ -78,7 +78,7 @@ if (AUTH_CONFIG.enabled) {
     console.log(`   Username: ${AUTH_CONFIG.username || 'NOT CONFIGURED'}`);
     console.log(`   Password: ${AUTH_CONFIG.password ? '***' : 'NOT CONFIGURED'}`);
     console.log(`   Session Secret: ${AUTH_CONFIG.sessionSecret ? '***' : 'NOT CONFIGURED'}`);
-    
+
     if (!AUTH_CONFIG.username || !AUTH_CONFIG.password || !AUTH_CONFIG.sessionSecret) {
         console.error('❌ Error: Authentication is enabled but credentials are not properly configured');
         process.exit(1);
@@ -92,10 +92,10 @@ function getAuthHeader() {
 // Get authentication token
 async function getAuthToken() {
     const { default: fetch } = await import('node-fetch');
-    
+
     try {
         // First, try to get the token
-        const authUrl = `https://${REGISTRY_CONFIG.url}/v2/`;
+        const authUrl = `${REGISTRY_CONFIG.url}/v2/`;
         const authResponse = await fetch(authUrl, {
             headers: {
                 'Authorization': getAuthHeader()
@@ -108,7 +108,7 @@ async function getAuthToken() {
                 // Extract token information
                 const realmMatch = authHeader.match(/realm="([^"]+)"/);
                 const serviceMatch = authHeader.match(/service="([^"]+)"/);
-                
+
                 if (realmMatch && serviceMatch) {
                     const tokenUrl = `${realmMatch[1]}?service=${serviceMatch[1]}`;
                     const tokenResponse = await fetch(tokenUrl, {
@@ -116,7 +116,7 @@ async function getAuthToken() {
                             'Authorization': getAuthHeader()
                         }
                     });
-                    
+
                     if (tokenResponse.ok) {
                         const tokenData = await tokenResponse.json();
                         return tokenData.token;
@@ -124,7 +124,7 @@ async function getAuthToken() {
                 }
             }
         }
-        
+
         return null;
     } catch (error) {
         console.warn('Error getting token:', error.message);
@@ -135,11 +135,11 @@ async function getAuthToken() {
 // Make requests to registry
 async function registryRequest(endpoint, options = {}) {
     const { default: fetch } = await import('node-fetch');
-    const url = `https://${REGISTRY_CONFIG.url}/v2${endpoint}`;
-    
+    const url = `${REGISTRY_CONFIG.url}/v2${endpoint}`;
+
     // Default Accept header, but allow override
     const defaultAccept = 'application/json';
-    
+
     // Try first with Basic Auth
     let headers = {
         'Authorization': getAuthHeader(),
@@ -162,7 +162,7 @@ async function registryRequest(endpoint, options = {}) {
                     'Accept': defaultAccept,
                     ...options.headers
                 };
-                
+
                 response = await fetch(url, {
                     ...options,
                     headers
@@ -200,8 +200,8 @@ app.get('/api/auth/user', getCurrentUser);
 
 // Health check endpoint (public - no authentication required)
 app.get('/health', (req, res) => {
-    res.status(200).json({ 
-        status: 'healthy', 
+    res.status(200).json({
+        status: 'healthy',
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
         version: require('./package.json').version || '1.0.0'
@@ -210,8 +210,8 @@ app.get('/health', (req, res) => {
 
 // Alternative health check endpoint
 app.get('/api/health', (req, res) => {
-    res.status(200).json({ 
-        status: 'healthy', 
+    res.status(200).json({
+        status: 'healthy',
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
         service: 'registry-console'
@@ -248,7 +248,7 @@ app.get('/api/repositories/:name(*)/tags', requireAuth, async (req, res) => {
 app.get('/api/repositories/:name(*)/manifests/:tag', requireAuth, async (req, res) => {
     try {
         const { name, tag } = req.params;
-        
+
         // Get the manifest first - need response object for headers
         const response = await registryRequest(`/${name}/manifests/${tag}`, {
             headers: {
@@ -256,41 +256,41 @@ app.get('/api/repositories/:name(*)/manifests/:tag', requireAuth, async (req, re
             },
             returnResponse: true
         });
-        
+
         const manifest = await response.json();
-        
+
         // Add digest from headers for deletion purposes
         const digest = response.headers.get('docker-content-digest');
         if (digest) {
             manifest.digest = digest;
         }
-        
+
         // Handle OCI index (multiarch images)
-        if (manifest.mediaType === 'application/vnd.oci.image.index.v1+json' || 
+        if (manifest.mediaType === 'application/vnd.oci.image.index.v1+json' ||
             manifest.mediaType === 'application/vnd.docker.distribution.manifest.list.v2+json') {
-            
+
             // For multiarch images, we can delete the entire index
             // Add platform information for display
             if (manifest.manifests && manifest.manifests.length > 0) {
                 manifest.platforms = manifest.manifests
                     .filter(m => m.platform && m.platform.architecture !== 'unknown')
                     .map(m => `${m.platform.os}/${m.platform.architecture}`);
-                
+
                 // Set size as sum of all manifests
                 manifest.totalSize = manifest.manifests.reduce((sum, m) => sum + (m.size || 0), 0);
             }
-            
+
             // Add registry URL for docker pull command
             manifest.registryUrl = REGISTRY_CONFIG.url;
-            
+
             return res.json(manifest);
         }
-        
+
         // If manifest has config, get the config blob for additional info
         if (manifest.config && manifest.config.digest) {
             try {
                 const configData = await registryRequest(`/${name}/blobs/${manifest.config.digest}`);
-                
+
                 // Merge config data into manifest response
                 manifest.config = {
                     ...manifest.config,
@@ -305,10 +305,10 @@ app.get('/api/repositories/:name(*)/manifests/:tag', requireAuth, async (req, re
                 // Continue with basic manifest data
             }
         }
-        
+
         // Add registry URL for docker pull command
         manifest.registryUrl = REGISTRY_CONFIG.url;
-        
+
         res.json(manifest);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -320,8 +320,8 @@ app.delete('/api/repositories/:name(*)/manifests/:digest', requireAuth, async (r
     try {
         const { default: fetch } = await import('node-fetch');
         const { name, digest } = req.params;
-        
-        const url = `https://${REGISTRY_CONFIG.url}/v2/${name}/manifests/${digest}`;
+
+        const url = `${REGISTRY_CONFIG.url}/v2/${name}/manifests/${digest}`;
         const response = await fetch(url, {
             method: 'DELETE',
             headers: {
@@ -355,13 +355,13 @@ app.get('/api/stats', requireAuth, async (req, res) => {
             console.log('📊 Returning cached statistics');
             return res.json(statsCache.data);
         }
-        
+
         console.log('📊 Calculating fresh statistics...');
-        
+
         // Get repository list
         const reposData = await registryRequest('/_catalog');
         const repositories = reposData.repositories || [];
-        
+
         let totalImages = 0;
         let totalSize = 0;
         let totalLayers = 0;
@@ -374,11 +374,11 @@ app.get('/api/stats', requireAuth, async (req, res) => {
             try {
                 const tagsData = await registryRequest(`/${repo}/tags/list`);
                 const tags = tagsData.tags || [];
-                
+
                 if (tags.length === 0) continue;
-                
+
                 totalImages += tags.length;
-                
+
                 // Analyze tag patterns
                 tags.forEach(tag => {
                     if (tag === 'latest') {
@@ -389,12 +389,12 @@ app.get('/api/stats', requireAuth, async (req, res) => {
                         tagStats.other++;
                     }
                 });
-                
+
                 // For each tag, get the manifest to calculate size
                 let repoSize = 0;
                 let repoLayers = 0;
                 let hasRecentActivity = false;
-                
+
                 for (const tag of tags) {
                     try {
                         const manifest = await registryRequest(`/${repo}/manifests/${tag}`, {
@@ -402,7 +402,7 @@ app.get('/api/stats', requireAuth, async (req, res) => {
                                 'Accept': 'application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
                             }
                         });
-                        
+
                         // Calculate size and layers based on manifest
                         if (manifest.config && manifest.config.size) {
                             repoSize += manifest.config.size;
@@ -415,17 +415,17 @@ app.get('/api/stats', requireAuth, async (req, res) => {
                                 }
                             });
                         }
-                        
+
                         // Check for recent activity (simplified - you might want to get actual timestamps)
                         if (tag === 'latest' || /^(main|master|dev)$/.test(tag)) {
                             hasRecentActivity = true;
                         }
-                        
+
                     } catch (err) {
                         console.warn(`Error getting manifest for ${repo}:${tag}`, err.message);
                     }
                 }
-                
+
                 // Categorize repository by size
                 const repoSizeMB = repoSize / (1024 * 1024);
                 if (repoSizeMB < 50) {
@@ -437,29 +437,29 @@ app.get('/api/stats', requireAuth, async (req, res) => {
                 } else {
                     sizeDistribution.xlarge++;
                 }
-                
+
                 if (hasRecentActivity) {
                     activityStats.recentRepos++;
                 }
                 if (tags.length > 1) {
                     activityStats.activeRepos++;
                 }
-                
+
                 repoStats.push({
                     name: repo,
                     tags: tags.length,
                     size: repoSize,
                     layers: repoLayers
                 });
-                
+
                 totalSize += repoSize;
                 totalLayers += repoLayers;
-                
+
             } catch (err) {
                 console.warn(`Error processing repository ${repo}`, err.message);
             }
         }
-        
+
         // Calculate averages
         const avgImagesPerRepo = repositories.length > 0 ? Math.round(totalImages / repositories.length * 10) / 10 : 0;
         const avgSizePerRepo = repositories.length > 0 ? totalSize / repositories.length : 0;
@@ -510,7 +510,7 @@ app.get('/api/stats', requireAuth, async (req, res) => {
         } else {
             console.log(`📊 Statistics calculated in ${statsData.metadata.processingTime}ms (cache disabled)`);
         }
-        
+
         res.json(statsData);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -521,11 +521,11 @@ app.get('/api/stats', requireAuth, async (req, res) => {
 app.post('/api/stats/refresh', requireAuth, async (req, res) => {
     try {
         console.log('🔄 Invalidating statistics cache...');
-        
+
         // Clear cache
         statsCache.data = null;
         statsCache.timestamp = 0;
-        
+
         res.json({
             success: true,
             message: 'Statistics cache cleared - next request will fetch fresh data'
